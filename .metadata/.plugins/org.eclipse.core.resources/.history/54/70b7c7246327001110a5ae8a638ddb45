@@ -1,0 +1,76 @@
+package in.cg.main.controller;
+
+import java.security.Principal;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import in.cg.main.dto.PrescriptionUploadResponse;
+import in.cg.main.entities.Prescription;
+import in.cg.main.service.PrescriptionService;
+
+@RestController
+@RequestMapping("/api/prescriptions")
+public class PrescriptionController {
+
+    private final PrescriptionService prescriptionService;
+
+    // ✅ Constructor Injection
+    public PrescriptionController(PrescriptionService prescriptionService) {
+        this.prescriptionService = prescriptionService;
+    }
+
+    // ── 1. Upload Prescription (USER ONLY) ───────────────
+    @PostMapping("/upload")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<PrescriptionUploadResponse> uploadPrescription(
+            Principal principal,
+            @RequestParam MultipartFile file) {
+
+        // ✅ Extract user from JWT (no manual userId)
+        String username = principal.getName();
+
+        return ResponseEntity.ok(
+                prescriptionService.uploadPrescription(username, file)
+        );
+    }
+
+    // ── 2. Get Prescriptions by Logged-in User ───────────
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<Prescription>> getMyPrescriptions(
+            Principal principal) {
+
+        String username = principal.getName();
+
+        return ResponseEntity.ok(
+                prescriptionService.getByUsername(username)
+        );
+    }
+
+    // ── 3. Get Pending Prescriptions (ADMIN ONLY) ────────
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Prescription>> getPendingPrescriptions() {
+
+        return ResponseEntity.ok(
+                prescriptionService.getPendingPrescription()
+        );
+    }
+
+    // ── 4. Review Prescription (ADMIN ONLY) ──────────────
+    @PutMapping("/review/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Prescription> reviewPrescription(
+            @PathVariable Long id,
+            @RequestParam boolean approved,
+            @RequestParam(required = false) String rejectionReason) {
+
+        return ResponseEntity.ok(
+                prescriptionService.reviewPrescription(id, approved, rejectionReason)
+        );
+    }
+}

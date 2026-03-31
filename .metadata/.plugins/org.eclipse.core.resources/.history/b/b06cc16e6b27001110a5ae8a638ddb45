@@ -1,0 +1,81 @@
+package in.cg.main.controller;
+
+import java.math.BigDecimal;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import in.cg.main.client.CatalogClient;
+import in.cg.main.dto.CartItemRequest;
+import in.cg.main.dto.CartResponse;
+import in.cg.main.dto.MedicineDTO;
+
+import in.cg.main.service.CartService;
+
+@RestController
+@RequestMapping("/api/orders/cart")
+public class CartController {
+
+    private final CartService cartService;
+    private final CatalogClient catalogClient; // 🔥 Feign
+
+    // ✅ Constructor Injection
+    public CartController(CartService cartService,
+                          CatalogClient catalogClient) {
+        this.cartService = cartService;
+        this.catalogClient = catalogClient;
+    }
+
+    // ✅ GET Cart
+    @GetMapping
+    public ResponseEntity<CartResponse> getCart(
+            @RequestHeader("X-Customer-Id") Long customerId) {
+
+        return ResponseEntity.ok(cartService.getCart(customerId));
+    }
+
+    // ✅ ADD Item (Feign Integration 🔥)
+    @PostMapping("/items")
+    public ResponseEntity<CartResponse> addItem(
+            @RequestHeader("X-Customer-Id") Long customerId,
+            @RequestBody @Valid CartItemRequest req) {
+
+        // 🔥 Call Catalog Service
+        MedicineDTO medicine = catalogClient.getMedicineById(req.getMedicineId());
+
+        return ResponseEntity.ok(
+                cartService.addItem(
+                        customerId,
+                        req,
+                        medicine.getName(),
+                        BigDecimal.valueOf(medicine.getPrice()),
+                        medicine.isRequiresPrescription(),
+                        medicine.getStock() // 🔥 correct
+                )
+        );
+    }
+
+    // ✅ UPDATE Item
+    @PutMapping("/items/{itemId}")
+    public ResponseEntity<CartResponse> updateItem(
+            @RequestHeader("X-Customer-Id") Long customerId,
+            @PathVariable Long itemId,
+            @RequestParam int quantity) {
+
+        return ResponseEntity.ok(
+                cartService.updateItem(customerId, itemId, quantity)
+        );
+    }
+
+    // ✅ REMOVE Item (FIXED 🔥)
+    @DeleteMapping("/items/{itemId}")
+    public ResponseEntity<CartResponse> removeItem(
+            @RequestHeader("X-Customer-Id") Long customerId,
+            @PathVariable Long itemId) {
+
+        return ResponseEntity.ok(
+                cartService.removeItem(customerId, itemId)
+        );
+    }
+}

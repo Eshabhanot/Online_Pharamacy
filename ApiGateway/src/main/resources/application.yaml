@@ -1,0 +1,114 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service-docs
+          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/auth/v3/api-docs
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/auth/**
+
+        - id: auth-user-service
+          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/user/**
+
+        - id: catalog-service-docs
+          uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/catalog/v3/api-docs
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: catalog-service
+          uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/catalog/**
+          filters:
+            - StripPrefix=1
+
+        - id: catalog-service-categories
+          uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/categories/**
+
+        - id: catalog-service-medicines
+          uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/medicines/**
+
+        - id: catalog-service-inventory
+          uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/inventory/**
+
+        - id: catalog-service-prescriptions
+          uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/prescriptions/**
+
+        - id: order-service-docs
+          uri: ${ORDER_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/orders/v3/api-docs
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: order-service
+          uri: ${ORDER_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/orders/**
+
+        - id: admin-service-docs
+          uri: ${ADMIN_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/admin/v3/api-docs
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: admin-service
+          uri: ${ADMIN_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/admin/**
+
+  main:
+    web-application-type: reactive
+
+# ✅ ADD THIS
+jwt:
+  secret: mySuperSecretKeyForJwtThatIsVerySecure1234567890
+
+# ✅ Swagger Aggregation
+springdoc:
+  swagger-ui:
+    persistAuthorization: true
+    urls:
+      - name: AUTH-SERVICE
+        url: /api/auth/v3/api-docs
+      - name: CATALOG-SERVICE
+        url: /api/catalog/v3/api-docs
+      - name: ORDER-SERVICE
+        url: /api/orders/v3/api-docs
+      - name: ADMIN-SERVICE
+        url: /api/admin/v3/api-docs
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: ${EUREKA_DEFAULT_ZONE:http://localhost:8761/eureka/}

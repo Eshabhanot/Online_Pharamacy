@@ -1,0 +1,66 @@
+package in.cg.main.controller;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import in.cg.main.dto.InventoryAddRequest;
+import in.cg.main.dto.InventoryResponse;
+import in.cg.main.service.InventoryService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/inventory")
+public class InventoryController {
+
+    private final InventoryService inventoryService;
+
+    // ✅ Constructor Injection
+    public InventoryController(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
+
+    // ── 1. Add Inventory Batch (Admin Only) ───────────────
+    @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<InventoryResponse> addBatch(
+            @Valid @RequestBody InventoryAddRequest request) {
+
+        return ResponseEntity.ok(inventoryService.addBatch(request));
+    }
+
+    // ── 2. Reduce Stock (Internal / Order Service) ────────
+    @PutMapping("/reduce")
+    @PreAuthorize("hasAnyRole('ADMIN','SERVICE')")
+    public ResponseEntity<String> reduceStock(
+            @RequestParam Long medicineId,
+            @RequestParam int quantity) {
+
+        inventoryService.reduceStock(medicineId, quantity);
+        return ResponseEntity.ok("Stock reduced successfully");
+    }
+
+    // ── 3. Get Expiring Batches ───────────────────────────
+    @GetMapping("/expiring")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<List<InventoryResponse>> getExpiringBatches(
+            @RequestParam(defaultValue = "7") int days) {
+
+        return ResponseEntity.ok(
+                inventoryService.getExpiringBatches(days)
+        );
+    }
+
+    // ── 4. Get Low Stock Batches ──────────────────────────
+    @GetMapping("/low-stock")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<InventoryResponse>> getLowStockBatches() {
+
+        return ResponseEntity.ok(
+                inventoryService.getLowStockBatches()
+        );
+    }
+}

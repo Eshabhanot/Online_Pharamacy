@@ -1,0 +1,192 @@
+package in.cg.main.service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import in.cg.main.dto.CheckoutRequest;
+import in.cg.main.dto.OrderResponse;
+import in.cg.main.entities.Address;
+import in.cg.main.entities.Cart;
+import in.cg.main.entities.CartItem;
+import in.cg.main.entities.Order;
+import in.cg.main.entities.OrderItem;
+import in.cg.main.enums.OrderStatus;
+import in.cg.main.repository.CartRepository;
+import in.cg.main.repository.OrderRepository;
+import in.cg.main.repository.AddressRepository;
+
+@Service
+@Transactional
+public class CheckoutServiceImpl implements CheckoutService {
+
+    private final CartRepository cartRepository;
+    private final OrderRepository orderRepository;
+    private final AddressRepository addressRepository;
+
+    private static final BigDecimal DELIVERY_CHARGE = BigDecimal.valueOf(49);
+    private static final BigDecimal FREE_DELIVERY_THRESHOLD = BigDecimal.valueOf(500);
+
+    // 🔹 Constructor Injection (No Lombok)
+    public CheckoutServiceImpl(CartRepository cartRepository,
+                               OrderRepository orderRepository,
+                               AddressRepository addressRepository) {
+        this.cartRepository = cartRepository;
+        this.orderRepository = orderRepository;
+        this.addressRepository = addressRepository;
+    }
+
+    // ✅ STEP 1: Start Checkout
+    @Override
+    public OrderResponse startCheckout(Long customerId, CheckoutRequest req) {
+
+        Cart cart = cartRepository.findByCustomerId(customerId)
+                .orElseThrow(() -> new RuntimeException("Cart is empty"));
+
+        if (cart.getItems().isEmpty()) {
+            throw new RuntimeException("Cannot checkout with an empty cart");
+        }
+
+        Address address = addressRepository.findById(req.getAddressId())
+                .orElseThrow(() -> new RuntimeException("Address not found"));
+
+        boolean needsRx = cart.getItems().stream()
+                .anyMatch(CartItem::isRequiresPrescription);
+
+        Order order = new Order();
+        order.setOrderNumber(generateOrderNumber());
+        order.setCustomerId(customerId);
+        order.setAddress(address);
+        order.setDeliverySlot(req.getDeliverySlot());
+
+        // ✅ Status Logic
+        if (needsRx) {
+            if (req.getPrescriptionId() == null) {
+                throw new RuntimeException("Prescription required for Rx items");
+            }
+            order.setPrescriptionId(req.getPrescriptionId());
+            order.setStatus(OrderStatus.PRESCRIPTION_PENDING);
+        } else {
+            order.setStatus(OrderStatus.PAYMENT_PENDING);
+        }
+
+        // ✅ Convert Cart → Order Items
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        for (CartItem ci : cart.getItems()) {
+            OrderItem oi = new OrderItem();
+            oi.setOrder(order);
+            oi.setMedicineId(ci.getMedicineId());
+            oi.setMedicineName(ci.getMedicineName());
+            oi.setQuantity(ci.getQuantity());
+            oi.setUnitPrice(ci.getUnitPrice());
+
+            BigDecimal lineTotal =
+                    ci.getUnitPrice().multiply(BigDecimal.valueOf(ci.getQuantity()));
+
+            oi.setTotalPrice(lineTotal);
+
+            order.getItems().add(oi);
+            subtotal = subtotal.add(lineTotal);
+        }
+
+        // ✅ Delivery charge logic
+        BigDecimal deliveryCharge =
+                subtotal.compareTo(FREE_DELIVERY_THRESHOLD) >= 0
+                        ? BigDecimal.ZERO
+                        : DELIVERY_CHARGE;
+
+        order.setSubtotal(subtotal);
+        order.setDeliveryCharge(deliveryCharge);
+        order.setTotalAmount(subtotal.add(deliveryCharge));
+
+        Order saved = orderRepository.save(order);
+
+        return buildOrderResponse(saved);
+    }
+
+    // ✅ STEP 2: Update Status
+    @Override
+    public OrderResponse updateStatus(Long orderId, OrderStatus newStatus) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        validateTransition(order.getStatus(), newStatus);
+        order.setStatus(newStatus);
+
+        if (newStatus == OrderStatus.DELIVERED) {
+            order.setDeliveredAt(LocalDateTime.now());
+        }
+
+        return buildOrderResponse(orderRepository.save(order));
+    }
+
+    // ================= PRIVATE METHODS =================
+
+    private void validateTransition(OrderStatus current, OrderStatus next) {
+
+        Map<OrderStatus, List<OrderStatus>> allowed = Map.of(
+                OrderStatus.PRESCRIPTION_PENDING,
+                List.of(OrderStatus.PRESCRIPTION_APPROVED, OrderStatus.PRESCRIPTION_REJECTED),
+
+                OrderStatus.PRESCRIPTION_APPROVED,
+                List.of(OrderStatus.PAYMENT_PENDING),
+
+                OrderStatus.PAYMENT_PENDING,
+                List.of(OrderStatus.PAID, OrderStatus.PAYMENT_FAILED,
+                        OrderStatus.CUSTOMER_CANCELLED),
+
+                OrderStatus.PAID,
+                List.of(OrderStatus.PACKED, OrderStatus.ADMIN_CANCELLED),
+
+                OrderStatus.PACKED,
+                List.of(OrderStatus.OUT_FOR_DELIVERY),
+
+                OrderStatus.OUT_FOR_DELIVERY,
+                List.of(OrderStatus.DELIVERED),
+
+                OrderStatus.DELIVERED,
+                List.of(OrderStatus.RETURN_REQUESTED)
+        );
+
+        List<OrderStatus> validNext = allowed.getOrDefault(current, List.of());
+
+        if (!validNext.contains(next)) {
+            throw new RuntimeException(
+                    "Invalid transition: " + current + " → " + next);
+        }
+    }
+
+    private String generateOrderNumber() {
+        String date = LocalDate.now()
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        String seq = String.format("%05d",
+                (int) (Math.random() * 99999));
+
+        return "ORD-" + date + "-" + seq;
+    }
+
+    private OrderResponse buildOrderResponse(Order order) {
+
+        // 🔥 Using manual builder
+        return new OrderResponse.Builder()
+                .id(order.getId())
+                .orderNumber(order.getOrderNumber())
+                .status(order.getStatus().name())
+                .subtotal(order.getSubtotal())
+                .deliveryCharge(order.getDeliveryCharge())
+                .totalAmount(order.getTotalAmount())
+                .deliverySlot(order.getDeliverySlot())
+                .placedAt(order.getPlacedAt())
+                .build();
+    }
+}

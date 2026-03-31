@@ -1,0 +1,32 @@
+package in.cg.main.repository;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import in.cg.enums.InventoryStatus;
+import in.cg.main.entities.Inventory;
+
+@Repository
+public interface InventoryRepository extends JpaRepository<Inventory, Long> {
+
+    List<Inventory> findByMedicineIdOrderByExpiryDateAsc(Long medicineId);
+
+    List<Inventory> findByStatus(InventoryStatus status);
+
+    List<Inventory> findByExpiryDateBeforeAndStatusNot(
+        LocalDate date, InventoryStatus status);
+
+    List<Inventory> findByQuantityLessThanAndStatus(
+        int threshold, InventoryStatus status);
+    
+    boolean existsByBatchNumber(String batchNumber);
+
+    @Query("SELECT COALESCE(SUM(i.quantity), 0) FROM Inventory i " +
+           "WHERE i.medicine.id = :medicineId AND i.status = 'ACTIVE'")
+    int sumActiveQuantityByMedicineId(@Param("medicineId") Long medicineId);
+}

@@ -1,0 +1,69 @@
+package in.cg.main.service;
+
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import in.cg.enums.PrescriptionStatus;
+import in.cg.main.dto.PrescriptionReviewRequest;
+import in.cg.main.entities.Prescription;
+import in.cg.main.repository.PrescriptionRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@Transactional
+public class AdminPrescriptionService {
+
+    private final PrescriptionRepository prescriptionRepository;
+
+    public AdminPrescriptionService(PrescriptionRepository prescriptionRepository) {
+        this.prescriptionRepository = prescriptionRepository;
+    }
+
+    // GET all PENDING prescriptions — the review queue
+    public List<Prescription> getPendingPrescriptions() {
+        return prescriptionRepository.findByStatus(PrescriptionStatus.PENDING);
+    }
+
+    // GET one prescription detail
+    public Prescription getPrescriptionById(Long id) {
+        return prescriptionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Prescription not found: " + id));
+    }
+
+    // APPROVE or REJECT
+    public Prescription reviewPrescription(Long prescriptionId,
+                                            PrescriptionReviewRequest request,
+                                            Long adminId) {
+
+        Prescription prescription = prescriptionRepository.findById(prescriptionId)
+            .orElseThrow(() -> new RuntimeException("Prescription not found"));
+
+        // Guard: can only review PENDING prescriptions
+        if (prescription.getStatus() != PrescriptionStatus.PENDING) {
+            throw new RuntimeException(
+                "Prescription already reviewed. Current status: "
+                + prescription.getStatus());
+        }
+
+        // Guard: rejection must have a reason
+        if (!request.isApproved() &&
+            (request.getRejectionReason() == null ||
+             request.getRejectionReason().isBlank())) {
+            throw new RuntimeException("Rejection reason is required");
+        }
+
+        if (request.isApproved()) {
+            prescription.setStatus(PrescriptionStatus.APPROVED);
+        } else {
+            prescription.setStatus(PrescriptionStatus.REJECTED);
+            prescription.setRejectionReason(request.getRejectionReason());
+        }
+
+        prescription.setReviewedAt(LocalDateTime.now());
+        prescription.setReviewedBy(adminId);
+
+        return prescriptionRepository.save(prescription);
+    }
+}

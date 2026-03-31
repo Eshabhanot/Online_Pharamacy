@@ -1,0 +1,181 @@
+package in.cg.main.service;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import in.cg.main.dto.CartItemRequest;
+import in.cg.main.dto.CartResponse;
+import in.cg.main.entities.Cart;
+import in.cg.main.entities.CartItem;
+import in.cg.main.exception.ResourceNotFoundException;
+import in.cg.main.repository.CartRepository;
+
+@Service
+@Transactional
+public class CartServiceImpl implements CartService {
+
+    private final CartRepository cartRepository;
+
+    public CartServiceImpl(CartRepository cartRepository) {
+        this.cartRepository = cartRepository;
+    }
+
+    // ✅ Get or create cart
+    @Override
+    public Cart getOrCreateCart(Long customerId) {
+        return cartRepository.findByCustomerId(customerId)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setCustomerId(customerId);
+                    return cartRepository.save(newCart);
+                });
+    }
+
+    // ✅ Get cart
+    @Override
+    public CartResponse getCart(Long customerId) {
+        Cart cart = getOrCreateCart(customerId);
+        return buildCartResponse(cart);
+    }
+
+    // ✅ Add item (FINAL)
+    @Override
+    public CartResponse addItem(Long customerId,
+                                CartItemRequest req,
+                                String medicineName,
+                                BigDecimal unitPrice,
+                                boolean requiresPrescription,
+                                int availableStock) {
+
+        Cart cart = getOrCreateCart(customerId);
+
+        if (req.getQuantity() > availableStock) {
+            throw new RuntimeException("Insufficient stock available");
+        }
+
+        CartItem existing = cart.getItems().stream()
+                .filter(i -> i.getMedicineId().equals(req.getMedicineId()))
+                .findFirst()
+                .orElse(null);
+
+        if (existing != null) {
+
+            int newQty = existing.getQuantity() + req.getQuantity();
+
+            if (newQty > availableStock) {
+                throw new RuntimeException("Exceeds available stock");
+            }
+
+            existing.setQuantity(newQty);
+
+        } else {
+
+            CartItem item = new CartItem();
+            item.setCart(cart);
+            item.setMedicineId(req.getMedicineId());
+            item.setMedicineName(medicineName);
+            item.setQuantity(req.getQuantity());
+            item.setUnitPrice(unitPrice);
+            item.setRequiresPrescription(requiresPrescription);
+
+            cart.getItems().add(item);
+        }
+
+        cartRepository.save(cart);
+        return buildCartResponse(cart);
+    }
+
+    // ✅ Update item
+    @Override
+    public CartResponse updateItem(Long customerId, Long cartItemId, int quantity) {
+
+        Cart cart = getOrCreateCart(customerId);
+
+        CartItem item = cart.getItems().stream()
+                .filter(i -> i.getId().equals(cartItemId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
+
+        if (quantity <= 0) {
+            cart.getItems().remove(item);
+        } else {
+            item.setQuantity(quantity);
+        }
+
+        cartRepository.save(cart);
+        return buildCartResponse(cart);
+    }
+
+    // ✅ Remove item
+    @Override
+    public CartResponse removeItem(Long customerId, Long cartItemId) {
+
+        Cart cart = getOrCreateCart(customerId);
+
+        CartItem item = cart.getItems().stream()
+                .filter(i -> i.getId().equals(cartItemId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
+
+        cart.getItems().remove(item);
+        cartRepository.save(cart);
+
+        return buildCartResponse(cart);
+    }
+
+    // ✅ Clear cart
+    @Override
+    public void clearCart(Long customerId) {
+        cartRepository.findByCustomerId(customerId)
+                .ifPresent(cart -> {
+                    cart.getItems().clear();
+                    cartRepository.save(cart);
+                });
+    }
+
+    // ================= DTO BUILDER =================
+
+    private CartResponse buildCartResponse(Cart cart) {
+
+        List<CartResponse.CartItemDto> itemDtos = cart.getItems().stream()
+                .map(i -> {
+                    CartResponse.CartItemDto dto = new CartResponse.CartItemDto();
+
+                    dto.setId(i.getId());
+                    dto.setMedicineId(i.getMedicineId());
+                    dto.setMedicineName(i.getMedicineName());
+                    dto.setQuantity(i.getQuantity());
+                    dto.setUnitPrice(i.getUnitPrice());
+
+                    dto.setLineTotal(
+                            i.getUnitPrice().multiply(
+                                    BigDecimal.valueOf(i.getQuantity()))
+                    );
+
+                    dto.setRequiresPrescription(i.isRequiresPrescription());
+                    dto.setPrescriptionUploaded(i.getPrescriptionId() != null);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        int totalItems = itemDtos.stream()
+                .mapToInt(CartResponse.CartItemDto::getQuantity)
+                .sum();
+
+        BigDecimal subtotal = itemDtos.stream()
+                .map(CartResponse.CartItemDto::getLineTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new CartResponse.Builder()
+                .cartId(cart.getId())
+                .items(itemDtos)
+                .subtotal(subtotal)
+                .totalItems(totalItems)
+                .build();
+    }
+}

@@ -1,0 +1,227 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: pharmacy-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: authDb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - pharmacy-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: pharmacy-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - pharmacy-net
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: pharmacy-zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - pharmacy-net
+
+  loki:
+    image: grafana/loki:2.9.8
+    container_name: pharmacy-loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    networks:
+      - pharmacy-net
+
+  promtail:
+    image: grafana/promtail:2.9.8
+    container_name: pharmacy-promtail
+    command: -config.file=/etc/promtail/config.yaml
+    volumes:
+      - ./docker/promtail/promtail-config.yaml:/etc/promtail/config.yaml:ro
+      - ./AuthService/logs:/var/log/microservices/auth:ro
+      - ./CatalogService/logs:/var/log/microservices/catalog:ro
+      - ./OrderService/logs:/var/log/microservices/order:ro
+      - ./AdminService/logs:/var/log/microservices/admin:ro
+      - ./ApiGateway/logs:/var/log/microservices/gateway:ro
+      - ./PharmacyEurekaServer/logs:/var/log/microservices/eureka:ro
+      - ./PharmacyConfigServer/logs:/var/log/microservices/config:ro
+    depends_on:
+      - loki
+    networks:
+      - pharmacy-net
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: pharmacy-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+    depends_on:
+      - loki
+    networks:
+      - pharmacy-net
+
+  eureka-server:
+    build: ./PharmacyEurekaServer
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    volumes:
+      - ./PharmacyEurekaServer/logs:/app/logs
+    depends_on:
+      - zipkin
+    networks:
+      - pharmacy-net
+
+  config-server:
+    build: ./PharmacyConfigServer
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./PharmacyConfigServer/logs:/app/logs
+    networks:
+      - pharmacy-net
+
+  auth-service:
+    build: ./AuthService
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/authDb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      ORDER_SERVICE_URL: http://order-service:8083
+      EUREKA_DEFAULT_ZONE: http://eureka-server:8761/eureka/
+      ZIPKIN_ENDPOINT: http://zipkin:9411/api/v2/spans
+    volumes:
+      - ./AuthService/logs:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - pharmacy-net
+
+  catalog-service:
+    build: ./CatalogService
+    container_name: catalog-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/catalogDb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      ADMIN_SERVICE_URL: http://admin-service:8084
+      EUREKA_DEFAULT_ZONE: http://eureka-server:8761/eureka/
+      ZIPKIN_ENDPOINT: http://zipkin:9411/api/v2/spans
+    volumes:
+      - ./CatalogService/logs:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - pharmacy-net
+
+  order-service:
+    build: ./OrderService
+    container_name: order-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/orderDb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      CATALOG_SERVICE_URL: http://catalog-service:8082
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EUREKA_DEFAULT_ZONE: http://eureka-server:8761/eureka/
+      ZIPKIN_ENDPOINT: http://zipkin:9411/api/v2/spans
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+    volumes:
+      - ./OrderService/logs:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    networks:
+      - pharmacy-net
+
+  admin-service:
+    build: ./AdminService
+    container_name: admin-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/adminDb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      CATALOG_SERVICE_URL: http://catalog-service:8082
+      EUREKA_DEFAULT_ZONE: http://eureka-server:8761/eureka/
+      ZIPKIN_ENDPOINT: http://zipkin:9411/api/v2/spans
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+    volumes:
+      - ./AdminService/logs:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    networks:
+      - pharmacy-net
+
+  api-gateway:
+    build: ./ApiGateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      CATALOG_SERVICE_URL: http://catalog-service:8082
+      ORDER_SERVICE_URL: http://order-service:8083
+      ADMIN_SERVICE_URL: http://admin-service:8084
+      EUREKA_DEFAULT_ZONE: http://eureka-server:8761/eureka/
+    volumes:
+      - ./ApiGateway/logs:/app/logs
+    depends_on:
+      - auth-service
+      - catalog-service
+      - order-service
+      - admin-service
+      - eureka-server
+    networks:
+      - pharmacy-net
+
+networks:
+  pharmacy-net:
+
+volumes:
+  mysql_data:
+  grafana_data:

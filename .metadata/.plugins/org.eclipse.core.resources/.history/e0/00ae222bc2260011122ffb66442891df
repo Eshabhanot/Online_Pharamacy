@@ -1,0 +1,154 @@
+package in.cg.main.service;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import in.cg.main.dto.CartItemRequest;
+import in.cg.main.dto.CartResponse;
+import in.cg.main.entities.Cart;
+import in.cg.main.entities.CartItem;
+import in.cg.main.repository.CartRepository;
+
+@Service
+@Transactional
+public class CartServiceImpl implements CartService {
+
+    private final CartRepository cartRepository;
+
+    // 🔹 Constructor Injection (No Lombok)
+    public CartServiceImpl(CartRepository cartRepository) {
+        this.cartRepository = cartRepository;
+    }
+
+    // ✅ Get or create cart
+    @Override
+    public Cart getOrCreateCart(Long customerId) {
+        return cartRepository.findByCustomerId(customerId)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setCustomerId(customerId);
+                    return cartRepository.save(newCart);
+                });
+    }
+
+    // ✅ NEW METHOD (Fix for Controller)
+    @Override
+    public CartResponse getCart(Long customerId) {
+        Cart cart = getOrCreateCart(customerId);
+        return buildCartResponse(cart);
+    }
+
+    // ✅ Add item
+    @Override
+    public CartResponse addItem(Long customerId,
+                                CartItemRequest req,
+                                String medicineName,
+                                BigDecimal unitPrice,
+                                boolean requiresPrescription) {
+
+        Cart cart = getOrCreateCart(customerId);
+
+        CartItem existing = cart.getItems().stream()
+                .filter(i -> i.getMedicineId().equals(req.getMedicineId()))
+                .findFirst()
+                .orElse(null);
+
+        if (existing != null) {
+            existing.setQuantity(existing.getQuantity() + req.getQuantity());
+        } else {
+            CartItem item = new CartItem();
+            item.setCart(cart);
+            item.setMedicineId(req.getMedicineId());
+            item.setMedicineName(medicineName);
+            item.setQuantity(req.getQuantity());
+            item.setUnitPrice(unitPrice);
+            item.setRequiresPrescription(requiresPrescription);
+
+            cart.getItems().add(item);
+        }
+
+        cartRepository.save(cart);
+        return buildCartResponse(cart);
+    }
+
+    // ✅ Update item (FIXED)
+    @Override
+    public CartResponse updateItem(Long customerId, Long cartItemId, int quantity) {
+
+        Cart cart = getOrCreateCart(customerId);
+
+        CartItem item = cart.getItems().stream()
+                .filter(i -> i.getId().equals(cartItemId))
+                .findFirst()
+                .orElse(null);
+
+        if (item == null) {
+            throw new RuntimeException("Cart item not found");
+        }
+
+        if (quantity <= 0) {
+            cart.getItems().remove(item);
+        } else {
+            item.setQuantity(quantity);
+        }
+
+        cartRepository.save(cart);
+        return buildCartResponse(cart);
+    }
+
+    // ✅ Clear cart
+    @Override
+    public void clearCart(Long customerId) {
+        cartRepository.findByCustomerId(customerId)
+                .ifPresent(cart -> {
+                    cart.getItems().clear();
+                    cartRepository.save(cart);
+                });
+    }
+
+    // ================= PRIVATE METHOD =================
+
+    private CartResponse buildCartResponse(Cart cart) {
+
+        List<CartResponse.CartItemDto> itemDtos = cart.getItems().stream()
+                .map(i -> {
+                    CartResponse.CartItemDto dto = new CartResponse.CartItemDto();
+                    dto.setId(i.getId());
+                    dto.setMedicineId(i.getMedicineId());
+                    dto.setMedicineName(i.getMedicineName());
+                    dto.setQuantity(i.getQuantity());
+                    dto.setUnitPrice(i.getUnitPrice());
+
+                    dto.setLineTotal(
+                            i.getUnitPrice().multiply(
+                                    BigDecimal.valueOf(i.getQuantity()))
+                    );
+
+                    dto.setRequiresPrescription(i.isRequiresPrescription());
+                    dto.setPrescriptionUploaded(i.getPrescriptionId() != null);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        // 🔥 FIX: correct total quantity
+        int totalItems = itemDtos.stream()
+                .mapToInt(CartResponse.CartItemDto::getQuantity)
+                .sum();
+
+        BigDecimal subtotal = itemDtos.stream()
+                .map(CartResponse.CartItemDto::getLineTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new CartResponse.Builder()
+                .cartId(cart.getId())
+                .items(itemDtos)
+                .subtotal(subtotal)
+                .totalItems(totalItems)
+                .build();
+    }
+}

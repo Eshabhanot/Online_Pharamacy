@@ -1,0 +1,5 @@
+package in.cg.main.exception;
+
+public class ResourceNotFoundException {
+
+}

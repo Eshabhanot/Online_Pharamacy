@@ -1,0 +1,23 @@
+package in.cg.main.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import in.cg.main.entities.Medicine;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
+public interface MedicineRepository extends JpaRepository<Medicine, Long> {
+	  List<Medicine> findByNameContainingIgnoreCase(String name);
+	    List<Medicine> findByCategoryId(Long categoryId);
+	    List<Medicine> findByIsActiveTrue();
+	    List<Medicine> findByStockLessThan(int threshold);
+	    List<Medicine> findByExpiryDateBefore(LocalDate date);
+	    boolean existsByNameAndBrand(String name, String brand);
+
+	    @Query("SELECT COUNT(m) FROM Medicine m WHERE m.isActive = true")
+	    long countActiveMedicines();
+	}

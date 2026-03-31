@@ -1,0 +1,293 @@
+﻿{
+  "info": {
+    "name": "Pharmacy Microservices Role Checklist",
+    "_postman_id": "9f89da5e-4f39-4f55-9c79-0d4d0aa61234",
+    "description": "Role-wise endpoint checklist for USER and ADMIN tokens across Auth, Catalog, Order, and Admin services.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "0. Auth (No Token)",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"User One\",\n  \"email\": \"{{userEmail}}\",\n  \"mobile\": \"9999999999\",\n  \"password\": \"{{userPassword}}\",\n  \"role\": \"USER\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{authBaseUrl}}/api/auth/register"
+          }
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin One\",\n  \"email\": \"{{adminEmail}}\",\n  \"mobile\": \"8888888888\",\n  \"password\": \"{{adminPassword}}\",\n  \"role\": \"ADMIN\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{authBaseUrl}}/api/auth/register"
+          }
+        },
+        {
+          "name": "Login USER (auto-save tokenUser)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const data = pm.response.json();",
+                  "  if (data.token) pm.collectionVariables.set('tokenUser', data.token);",
+                  "}",
+                  "pm.test('USER login status', () => pm.expect(pm.response.code).to.eql(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}"
+            },
+            "url": "{{authBaseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Login ADMIN (auto-save tokenAdmin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const data = pm.response.json();",
+                  "  if (data.token) pm.collectionVariables.set('tokenAdmin', data.token);",
+                  "}",
+                  "pm.test('ADMIN login status', () => pm.expect(pm.response.code).to.eql(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": "{{authBaseUrl}}/api/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Catalog - USER Allowed",
+      "item": [
+        {
+          "name": "GET Categories (USER)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenUser}}" }],
+            "url": "{{catalogBaseUrl}}/api/categories"
+          }
+        },
+        {
+          "name": "GET Medicines (USER)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenUser}}" }],
+            "url": "{{catalogBaseUrl}}/api/medicines"
+          }
+        },
+        {
+          "name": "GET Medicine By Id (USER)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenUser}}" }],
+            "url": "{{catalogBaseUrl}}/api/medicines/1"
+          }
+        },
+        {
+          "name": "GET Expiring Inventory (USER)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenUser}}" }],
+            "url": "{{catalogBaseUrl}}/api/inventory/expiring?days=7"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Catalog - ADMIN Required",
+      "item": [
+        {
+          "name": "POST Category (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tokenAdmin}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tablets\",\n  \"description\": \"General medicines\"\n}"
+            },
+            "url": "{{catalogBaseUrl}}/api/categories"
+          }
+        },
+        {
+          "name": "POST Inventory Add (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tokenAdmin}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicineId\": 1,\n  \"quantity\": 100,\n  \"batchNumber\": \"B001\",\n  \"expiryDate\": \"2027-12-31\"\n}"
+            },
+            "url": "{{catalogBaseUrl}}/api/inventory/add"
+          }
+        },
+        {
+          "name": "GET Low Stock (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+            "url": "{{catalogBaseUrl}}/api/inventory/low-stock"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Order - USER",
+      "item": [
+        {
+          "name": "GET Cart (USER)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tokenUser}}" },
+              { "key": "X-Customer-Id", "value": "{{customerId}}" }
+            ],
+            "url": "{{orderBaseUrl}}/api/orders/cart"
+          }
+        },
+        {
+          "name": "GET Orders (USER)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tokenUser}}" },
+              { "key": "X-Customer-Id", "value": "{{customerId}}" }
+            ],
+            "url": "{{orderBaseUrl}}/api/orders"
+          }
+        },
+        {
+          "name": "POST Payment Initiate (USER)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenUser}}" }],
+            "url": "{{orderBaseUrl}}/api/orders/payments/initiate?orderId=1&method=COD"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Order - ADMIN Access",
+      "item": [
+        {
+          "name": "GET Orders (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tokenAdmin}}" },
+              { "key": "X-Customer-Id", "value": "{{customerId}}" }
+            ],
+            "url": "{{orderBaseUrl}}/api/orders"
+          }
+        },
+        {
+          "name": "GET Cart (ADMIN - expected 403)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tokenAdmin}}" },
+              { "key": "X-Customer-Id", "value": "{{customerId}}" }
+            ],
+            "url": "{{orderBaseUrl}}/api/orders/cart"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Admin Service - ADMIN Only",
+      "item": [
+        {
+          "name": "GET Dashboard (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+            "url": "{{adminBaseUrl}}/api/admin/dashboard"
+          }
+        },
+        {
+          "name": "GET Admin Medicines (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+            "url": "{{adminBaseUrl}}/api/admin/medicines"
+          }
+        },
+        {
+          "name": "GET Pending Prescriptions (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+            "url": "{{adminBaseUrl}}/api/admin/prescriptions/pending"
+          }
+        },
+        {
+          "name": "GET Medicines Report CSV (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+            "url": "{{adminBaseUrl}}/api/admin/reports/medicines/export"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "authBaseUrl", "value": "http://localhost:8081" },
+    { "key": "catalogBaseUrl", "value": "http://localhost:8082" },
+    { "key": "orderBaseUrl", "value": "http://localhost:8083" },
+    { "key": "adminBaseUrl", "value": "http://localhost:8084" },
+    { "key": "userEmail", "value": "user1@example.com" },
+    { "key": "userPassword", "value": "Password@123" },
+    { "key": "adminEmail", "value": "admin1@example.com" },
+    { "key": "adminPassword", "value": "Password@123" },
+    { "key": "tokenUser", "value": "" },
+    { "key": "tokenAdmin", "value": "" },
+    { "key": "customerId", "value": "1" }
+  ]
+}

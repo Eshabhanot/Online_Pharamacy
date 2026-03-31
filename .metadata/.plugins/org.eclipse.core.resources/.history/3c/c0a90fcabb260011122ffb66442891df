@@ -1,0 +1,28 @@
+package in.cg.main.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import in.cg.main.entities.Order;
+import in.cg.main.enums.OrderStatus;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface OrderRepository extends JpaRepository<Order, Long> {
+
+    List<Order> findByCustomerIdOrderByPlacedAtDesc(Long customerId);
+
+    Optional<Order> findByOrderNumber(String orderNumber);
+
+    // Admin: filter by status
+    List<Order> findByStatus(OrderStatus status);
+
+    // Admin: orders placed in a time range
+    List<Order> findByPlacedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    // Dashboard KPI
+    long countByStatus(OrderStatus status);
+}

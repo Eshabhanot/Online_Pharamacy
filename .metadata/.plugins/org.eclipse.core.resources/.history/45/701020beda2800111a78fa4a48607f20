@@ -1,0 +1,31 @@
+package in.cg.main.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import in.cg.main.dto.CategoryDTO;
+import in.cg.main.dto.MedicineDTO;
+import in.cg.main.entities.Category;
+import in.cg.main.repository.CategoryRepository;
+
+@Service
+public class CategoryServiceImp implements CategoryService{
+	@Autowired
+	private CategoryRepository repo;
+
+	@Override
+	@Cacheable(value = "categories", key = "#page + '-' + #size")
+	public Page<CategoryDTO> getAllCategories(int page, int size) {
+			Page<Category> med = repo.findAll(PageRequest.of(page, size));
+		   return med.map(m->{
+			   CategoryDTO dto = new CategoryDTO();
+			   dto.setName(m.getName());
+			   dto.setDescription(m.getDescription());
+			   return dto; 
+		   }) ;
+	}
+
+}

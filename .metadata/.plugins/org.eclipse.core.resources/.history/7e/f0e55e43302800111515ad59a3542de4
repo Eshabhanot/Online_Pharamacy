@@ -1,0 +1,133 @@
+package in.cg.main.service;
+
+import in.cg.main.dto.DashboardResponse;
+import in.cg.main.enums.InventoryStatus;
+import in.cg.main.enums.PrescriptionStatus;
+import in.cg.main.repository.InventoryRepository;
+import in.cg.main.repository.MedicineRepository;
+import in.cg.main.repository.PrescriptionRepository;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class AdminDashboardServiceTest {
+
+    @Mock private MedicineRepository medicineRepository;
+    @Mock private InventoryRepository inventoryRepository;
+    @Mock private PrescriptionRepository prescriptionRepository;
+    @Mock private RestTemplate restTemplate;
+
+    @InjectMocks
+    private AdminDashboardService adminDashboardService;
+
+    // ===============================
+    // ✅ SUCCESS CASE
+    // ===============================
+    @Test
+    void getDashboard_success() {
+
+        when(prescriptionRepository.countByStatus(PrescriptionStatus.PENDING))
+                .thenReturn(5L);
+
+        when(medicineRepository.findByStockLessThan(10))
+                .thenReturn(Collections.emptyList());
+
+        when(inventoryRepository.findByExpiryDateBeforeAndStatusNot(any(), eq(InventoryStatus.EXPIRED)))
+                .thenReturn(Collections.emptyList());
+
+        when(medicineRepository.countActiveMedicines())
+                .thenReturn(20L);
+
+        when(restTemplate.getForObject(anyString(),
+                eq(AdminDashboardService.DashboardOrderStats.class)))
+                .thenReturn(null);
+
+        DashboardResponse result = adminDashboardService.getDashboard();
+
+        assertNotNull(result);
+        assertEquals(5, result.getPendingPrescriptions());
+        assertEquals(0, result.getLowStockMedicines());
+        assertEquals(20, result.getTotalActiveMedicines());
+
+        // ✅ verify interactions (important for Sonar)
+        verify(prescriptionRepository).countByStatus(PrescriptionStatus.PENDING);
+        verify(medicineRepository).findByStockLessThan(10);
+        verify(medicineRepository).countActiveMedicines();
+        verify(restTemplate).getForObject(anyString(),
+                eq(AdminDashboardService.DashboardOrderStats.class));
+    }
+
+    // ===============================
+    // ⚠️ ORDER SERVICE FAILURE CASE
+    // ===============================
+    @Test
+    void getDashboard_orderServiceDown_gracefulDegradation() {
+
+        when(prescriptionRepository.countByStatus(PrescriptionStatus.PENDING))
+                .thenReturn(0L);
+
+        when(medicineRepository.findByStockLessThan(10))
+                .thenReturn(Collections.emptyList());
+
+        when(inventoryRepository.findByExpiryDateBeforeAndStatusNot(any(), eq(InventoryStatus.EXPIRED)))
+                .thenReturn(Collections.emptyList());
+
+        when(medicineRepository.countActiveMedicines())
+                .thenReturn(10L);
+
+        when(restTemplate.getForObject(anyString(),
+                eq(AdminDashboardService.DashboardOrderStats.class)))
+                .thenThrow(new RestClientException("Connection refused"));
+
+        DashboardResponse result = adminDashboardService.getDashboard();
+
+        assertNotNull(result);
+
+        // ✅ fallback logic validation
+        assertEquals(0, result.getTotalOrdersToday());
+        assertEquals(10, result.getTotalActiveMedicines());
+    }
+
+    // ===============================
+    // 🔥 EDGE CASE: NULL RESPONSE FROM ORDER SERVICE
+    // ===============================
+    @Test
+    void getDashboard_nullOrderStats_shouldHandleGracefully() {
+
+        when(prescriptionRepository.countByStatus(any()))
+                .thenReturn(2L);
+
+        when(medicineRepository.findByStockLessThan(anyInt()))
+                .thenReturn(Collections.emptyList());
+
+        when(inventoryRepository.findByExpiryDateBeforeAndStatusNot(any(), any()))
+                .thenReturn(Collections.emptyList());
+
+        when(medicineRepository.countActiveMedicines())
+                .thenReturn(15L);
+
+        when(restTemplate.getForObject(anyString(),
+                eq(AdminDashboardService.DashboardOrderStats.class)))
+                .thenReturn(null);
+
+        DashboardResponse result = adminDashboardService.getDashboard();
+
+        assertNotNull(result);
+        assertEquals(2, result.getPendingPrescriptions());
+        assertEquals(0, result.getTotalOrdersToday()); // fallback expected
+    }
+}

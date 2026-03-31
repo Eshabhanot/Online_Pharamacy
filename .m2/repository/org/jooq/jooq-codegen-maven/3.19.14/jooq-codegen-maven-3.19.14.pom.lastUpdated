@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Mar 30 18:07:20 IST 2026
+@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1774874240533
+https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.jooq\:jooq-codegen-maven\:pom\:3.19.14 from/to central (https\://repo.maven.apache.org/maven2)\: Permission denied\: getsockopt

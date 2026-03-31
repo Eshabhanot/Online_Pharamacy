@@ -1,0 +1,7 @@
+package in.cg.enums;
+
+public enum PrescriptionStatus {
+	 PENDING,
+	 APPROVED,
+	 REJECTED
+}

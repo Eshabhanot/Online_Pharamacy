@@ -1,0 +1,122 @@
+package in.cg.main.controller;
+
+import in.cg.main.dto.DashboardResponse;
+import in.cg.main.security.JwtFilter;
+import in.cg.main.security.JwtUtil;
+import in.cg.main.security.SecurityConfig;
+import in.cg.main.service.AdminDashboardService;
+import in.cg.main.service.AdminMedicineService;
+import in.cg.main.service.AdminPrescriptionService;
+import in.cg.main.service.AdminReportService;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Collections;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest({
+        AdminDashboardController.class,
+        AdminMedicineController.class,
+        AdminPrescriptionController.class,
+        AdminReportController.class
+})
+@Import({SecurityConfig.class, JwtFilter.class})
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@TestPropertySource(properties = {
+        "spring.cloud.config.enabled=false",
+        "spring.cloud.config.import-check.enabled=false",
+        "eureka.client.enabled=false"
+})
+class AdminSecurityTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean private AdminDashboardService adminDashboardService;
+    @MockBean private AdminMedicineService adminMedicineService;
+    @MockBean private AdminPrescriptionService adminPrescriptionService;
+    @MockBean private AdminReportService adminReportService;
+
+    @MockBean private JwtUtil jwtUtil;
+    @MockBean private UserDetailsService userDetailsService;
+
+    @Test
+    void dashboard_unauthenticated_returns401() throws Exception {
+        mockMvc.perform(get("/api/admin/dashboard"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void medicines_unauthenticated_returns401() throws Exception {
+        mockMvc.perform(get("/api/admin/medicines"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void dashboard_withUserRole_returns403() throws Exception {
+        mockMvc.perform(get("/api/admin/dashboard"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void medicines_withUserRole_returns403() throws Exception {
+        mockMvc.perform(get("/api/admin/medicines"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void dashboard_withAdminRole_returns200() throws Exception {
+        when(adminDashboardService.getDashboard())
+                .thenReturn(new DashboardResponse());
+
+        mockMvc.perform(get("/api/admin/dashboard"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void medicines_withAdminRole_returns200() throws Exception {
+        when(adminMedicineService.getAllMedicines())
+                .thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/api/admin/medicines"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void prescriptions_withAdminRole_returns200() throws Exception {
+        when(adminPrescriptionService.getPendingPrescriptions())
+                .thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/api/admin/prescriptions/pending"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void reports_withAdminRole_returns200() throws Exception {
+        when(adminReportService.exportMedicinesCsv())
+                .thenReturn("data".getBytes());
+
+        mockMvc.perform(get("/api/admin/reports/medicines/export"))
+                .andExpect(status().isOk());
+    }
+}

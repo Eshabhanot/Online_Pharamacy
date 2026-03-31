@@ -1,0 +1,47 @@
+package in.cg.main.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+
+import in.cg.main.dto.CheckoutRequest;
+import in.cg.main.dto.OrderResponse;
+import in.cg.main.service.CheckoutService;
+
+@RestController
+@RequestMapping("/api/orders/checkout")
+public class CheckoutController {
+
+    private final CheckoutService checkoutService;
+
+    // 🔹 Constructor Injection (No Lombok)
+    public CheckoutController(CheckoutService checkoutService) {
+        this.checkoutService = checkoutService;
+    }
+
+    // ✅ Start Checkout
+    @PostMapping("/start")
+    public ResponseEntity<OrderResponse> startCheckout(
+            @RequestHeader("X-Customer-Id") Long customerId,
+            @RequestBody @Valid CheckoutRequest req) {
+
+        return ResponseEntity.ok(
+                checkoutService.startCheckout(customerId, req)
+        );
+    }
+
+    // 🔥 OPTIONAL (Recommended) → Update Order Status
+    @PutMapping("/status/{orderId}")
+    public ResponseEntity<OrderResponse> updateStatus(
+            @PathVariable Long orderId,
+            @RequestParam String status) {
+
+        return ResponseEntity.ok(
+                checkoutService.updateStatus(
+                        orderId,
+                        Enum.valueOf(in.cg.main.enums.OrderStatus.class, status)
+                )
+        );
+    }
+}

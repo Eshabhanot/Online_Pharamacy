@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Mar 30 18:07:20 IST 2026
+@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1774874240405
+https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.cyclonedx\:cyclonedx-maven-plugin\:pom\:2.8.2 from/to central (https\://repo.maven.apache.org/maven2)\: Permission denied\: getsockopt

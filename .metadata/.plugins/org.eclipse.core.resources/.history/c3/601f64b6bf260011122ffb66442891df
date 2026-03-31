@@ -1,0 +1,80 @@
+package in.cg.main.controller;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import in.cg.main.dto.OrderResponse;
+
+import in.cg.main.repository.OrderRepository;
+import in.cg.main.service.CheckoutService;
+
+@RestController
+@RequestMapping("/api/orders")
+public class OrderController {
+
+    private final CheckoutService checkoutService;
+    private final OrderRepository orderRepository;
+
+    // 🔹 Constructor Injection (No Lombok)
+    public OrderController(CheckoutService checkoutService,
+                           OrderRepository orderRepository) {
+        this.checkoutService = checkoutService;
+        this.orderRepository = orderRepository;
+    }
+
+    // ✅ GET My Orders
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getMyOrders(
+            @RequestHeader("X-Customer-Id") Long customerId) {
+
+        List<OrderResponse> orders = orderRepository
+                .findByCustomerIdOrderByPlacedAtDesc(customerId)
+                .stream()
+                .map(o -> new OrderResponse.Builder()
+                        .id(o.getId())
+                        .orderNumber(o.getOrderNumber())
+                        .status(o.getStatus().name())
+                        .totalAmount(o.getTotalAmount())
+                        .placedAt(o.getPlacedAt())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(orders);
+    }
+
+    // ✅ GET Single Order
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable Long id) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // 🔥 Build DTO manually (since method is private)
+        OrderResponse response = new OrderResponse.Builder()
+                .id(order.getId())
+                .orderNumber(order.getOrderNumber())
+                .status(order.getStatus().name())
+                .subtotal(order.getSubtotal())
+                .deliveryCharge(order.getDeliveryCharge())
+                .totalAmount(order.getTotalAmount())
+                .deliverySlot(order.getDeliverySlot())
+                .placedAt(order.getPlacedAt())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ✅ Cancel Order
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<OrderResponse> cancelOrder(
+            @PathVariable Long id,
+            @RequestHeader("X-Customer-Id") Long customerId) {
+
+        return ResponseEntity.ok(
+                checkoutService.updateStatus(id, OrderStatus.CUSTOMER_CANCELLED)
+        );
+    }
+}

@@ -1,0 +1,85 @@
+package in.cg.main.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Service
+public class AdminDashboardService {
+
+    private final MedicineRepository medicineRepository;
+    private final InventoryRepository inventoryRepository;
+    private final PrescriptionRepository prescriptionRepository;
+    private final RestTemplate restTemplate;
+
+    public AdminDashboardService(MedicineRepository medicineRepository,
+                                  InventoryRepository inventoryRepository,
+                                  PrescriptionRepository prescriptionRepository,
+                                  RestTemplate restTemplate) {
+        this.medicineRepository = medicineRepository;
+        this.inventoryRepository = inventoryRepository;
+        this.prescriptionRepository = prescriptionRepository;
+        this.restTemplate = restTemplate;
+    }
+
+    public DashboardResponse getDashboard() {
+        DashboardResponse dashboard = new DashboardResponse();
+
+        // 1. Prescription queue count
+        dashboard.setPendingPrescriptions(
+            prescriptionRepository.countByStatus(PrescriptionStatus.PENDING));
+
+        // 2. Low stock medicines (stock < 10)
+        dashboard.setLowStockMedicines(
+            medicineRepository.findByStockLessThan(10).size());
+
+        // 3. Expiring batches in next 30 days
+        dashboard.setExpiringBatchesIn30Days(
+            inventoryRepository.findByExpiryDateBeforeAndStatusNot(
+                LocalDate.now().plusDays(30),
+                InventoryStatus.EXPIRED).size());
+
+        // 4. Total active medicines
+        dashboard.setTotalActiveMedicines(
+            medicineRepository.countActiveMedicines());
+
+        // 5. Order stats come from Order Service via REST call
+        try {
+            DashboardOrderStats stats = restTemplate.getForObject(
+                "http://localhost:8083/api/internal/orders/stats",
+                DashboardOrderStats.class);
+
+            if (stats != null) {
+                dashboard.setTotalOrdersToday(stats.getTotalOrdersToday());
+                dashboard.setPendingOrders(stats.getPendingOrders());
+                dashboard.setDeliveredOrdersToday(stats.getDeliveredOrdersToday());
+                dashboard.setRevenueToday(stats.getRevenueToday());
+            }
+        } catch (Exception e) {
+            // graceful degradation if Order Service is down
+            dashboard.setTotalOrdersToday(0);
+            dashboard.setRevenueToday(BigDecimal.ZERO);
+        }
+
+        return dashboard;
+    }
+
+    // Inner class to map Order Service response
+    public static class DashboardOrderStats {
+        private long totalOrdersToday;
+        private long pendingOrders;
+        private long deliveredOrdersToday;
+        private BigDecimal revenueToday;
+
+        public long getTotalOrdersToday() { return totalOrdersToday; }
+        public long getPendingOrders() { return pendingOrders; }
+        public long getDeliveredOrdersToday() { return deliveredOrdersToday; }
+        public BigDecimal getRevenueToday() { return revenueToday; }
+        public void setTotalOrdersToday(long v) { this.totalOrdersToday = v; }
+        public void setPendingOrders(long v) { this.pendingOrders = v; }
+        public void setDeliveredOrdersToday(long v) { this.deliveredOrdersToday = v; }
+        public void setRevenueToday(BigDecimal v) { this.revenueToday = v; }
+    }
+}

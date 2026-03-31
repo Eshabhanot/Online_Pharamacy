@@ -1,0 +1,5 @@
+package in.cg.main.util;
+
+public class JwtUtil {
+
+}
