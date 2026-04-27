@@ -92,4 +92,18 @@ public class CartController {
         Long customerId = requestCustomerResolver.resolve(customerIdHeader, authorizationHeader);
         return ResponseEntity.ok(cartService.removeItem(customerId, itemId));
     }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<CartCountResponse> getCartItemCount(
+            @RequestHeader(value = "X-Customer-Id", required = false) Long customerIdHeader,
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+
+        Long customerId = requestCustomerResolver.resolve(customerIdHeader, authorizationHeader);
+        CartResponse cart = cartService.getCart(customerId);
+        int count = cart.getItems() != null ? cart.getItems().size() : 0;
+        return ResponseEntity.ok(new CartCountResponse(count));
+    }
+
+    public record CartCountResponse(int itemCount) {}
 }

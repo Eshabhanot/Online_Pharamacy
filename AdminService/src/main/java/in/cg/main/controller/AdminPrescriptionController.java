@@ -45,9 +45,8 @@ public class AdminPrescriptionController {
             @RequestBody PrescriptionReviewRequest request,
             Authentication authentication) {
 
-        // Extract admin ID from JWT — stored as username (email)
-        // In real implementation you'd decode the JWT to get the admin's DB ID
-        Long adminId = 1L;  // placeholder; replace with actual JWT claim
+        
+        Long adminId = 1L;  
 
         return ResponseEntity.ok(
             adminPrescriptionService.reviewPrescription(id, request, adminId));

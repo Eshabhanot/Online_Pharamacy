@@ -1,0 +1,583 @@
+2026-04-09T08:45:02.908Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : Starting AuthServiceApplication v1.0 using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+2026-04-09T08:45:02.966Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-04-09T08:45:08.635Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-09T08:45:09.173Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 511 ms. Found 2 JPA repository interfaces.
+2026-04-09T08:45:10.218Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.cloud.context.scope.GenericScope     : BeanFactory id=4fbb1a0d-e248-3145-9945-8eb0ce314436
+2026-04-09T08:45:11.433Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-04-09T08:45:11.449Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-04-09T08:45:12.431Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-04-09T08:45:12.468Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-09T08:45:12.472Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-04-09T08:45:12.568Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-09T08:45:12.571Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 9406 ms
+2026-04-09T08:45:15.107Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-09T08:45:15.413Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-04-09T08:45:15.645Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-09T08:45:16.745Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-09T08:45:16.849Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-09T08:45:17.518Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1390a415
+2026-04-09T08:45:17.524Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-09T08:45:20.138Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-09T08:45:20.287Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-09T08:45:21.484Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-09T08:45:21.488Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-04-09T08:45:21.988Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-09T08:45:23.544Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-04-09T08:45:26.009Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-04-09T08:45:26.270Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-04-09T08:45:26.676Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-04-09T08:45:26.783Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-04-09T08:45:26.804Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T08:45:26.838Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T08:45:26.839Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T08:45:26.841Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T08:45:26.842Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T08:45:26.844Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T08:45:26.845Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-04-09T08:45:26.847Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T08:45:27.498Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T08:45:27.505Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2026-04-09T08:45:27.519Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-04-09T08:45:27.529Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1775724327526 with initial instances count: 0
+2026-04-09T08:45:27.564Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application AUTH-SERVICE with eureka with status UP
+2026-04-09T08:45:27.570Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1775724327570, current=UP, previous=STARTING]
+2026-04-09T08:45:27.586Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/39eb070db076:AUTH-SERVICE:8081: registering service...
+2026-04-09T08:45:27.683Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2026-04-09T08:45:27.692Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8081
+2026-04-09T08:45:27.761Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : Started AuthServiceApplication in 26.451 seconds (process running for 28.277)
+2026-04-09T08:45:27.766Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/39eb070db076:AUTH-SERVICE:8081 - registration status: 204
+2026-04-09T08:45:56.491Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-09T08:45:56.493Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-09T08:45:56.497Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2026-04-09T08:45:56.914Z  INFO [AUTH-SERVICE,traceId=69d76744baa06db73819ec746b0cd8c8,spanId=44b75849cb9cc5ca] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [69d76744baa06db73819ec746b0cd8c8-44b75849cb9cc5ca] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 322 ms
+2026-04-09T08:45:57.503Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T08:45:57.505Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T08:45:57.506Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T08:45:57.506Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T08:45:57.507Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T08:45:57.507Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2026-04-09T08:45:57.508Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T08:45:57.547Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T08:50:23.387Z  INFO [AUTH-SERVICE,traceId=69d7684fe17ae8c7d7d58143d98963ef,spanId=df7b2a6764b4448f] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-7] [69d7684fe17ae8c7d7d58143d98963ef-df7b2a6764b4448f] in.cg.main.service.EmailService          : Registration email skipped because mail is disabled for karan.bhanot@gmail.com
+2026-04-09T08:50:26.812Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T08:51:49.015Z  INFO [AUTH-SERVICE,traceId=69d768a4b27f482a0ba5b8bcc8adb4e3,spanId=528bd44c1b2b8682] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-9] [69d768a4b27f482a0ba5b8bcc8adb4e3-528bd44c1b2b8682] in.cg.main.service.EmailService          : Registration email skipped because mail is disabled for riya.verma@gmail.com
+2026-04-09T08:55:26.779Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T09:00:26.746Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T09:05:26.620Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T09:10:26.571Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T09:12:02.862Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application AUTH-SERVICE with eureka with status DOWN
+2026-04-09T09:12:02.868Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1775725922868, current=DOWN, previous=UP]
+2026-04-09T09:12:02.881Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/39eb070db076:AUTH-SERVICE:8081: registering service...
+2026-04-09T09:12:02.977Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/39eb070db076:AUTH-SERVICE:8081 - registration status: 204
+2026-04-09T09:12:03.125Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-09T09:12:03.160Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-04-09T09:12:03.251Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-04-09T09:12:03.690Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.netflix.discovery.DiscoveryClient    : Shutting down DiscoveryClient ...
+2026-04-09T14:26:04.092Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : Starting AuthServiceApplication v1.0 using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+2026-04-09T14:26:04.103Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-04-09T14:26:09.861Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-09T14:26:10.303Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 414 ms. Found 3 JPA repository interfaces.
+2026-04-09T14:26:11.285Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.cloud.context.scope.GenericScope     : BeanFactory id=27b9e3ed-af57-3a88-adc9-0c153cc122d6
+2026-04-09T14:26:12.446Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-04-09T14:26:12.460Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-04-09T14:26:13.258Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-04-09T14:26:13.299Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-09T14:26:13.302Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-04-09T14:26:13.401Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-09T14:26:13.404Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 9085 ms
+2026-04-09T14:26:16.071Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-09T14:26:16.252Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-04-09T14:26:16.363Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-09T14:26:17.058Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-09T14:26:17.143Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-09T14:26:17.825Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@769f6023
+2026-04-09T14:26:17.831Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-09T14:26:19.815Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-09T14:26:19.924Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-09T14:26:20.880Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-09T14:26:20.883Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-04-09T14:26:20.994Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-09T14:26:21.998Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-09T14:26:23.206Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-04-09T14:26:25.106Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-04-09T14:26:25.361Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-04-09T14:26:25.627Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-04-09T14:26:25.732Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-04-09T14:26:25.747Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T14:26:25.786Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T14:26:25.787Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T14:26:25.789Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T14:26:25.791Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T14:26:25.792Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T14:26:25.794Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-04-09T14:26:25.795Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T14:26:26.358Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T14:26:26.362Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2026-04-09T14:26:26.369Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-04-09T14:26:26.375Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1775744786373 with initial instances count: 0
+2026-04-09T14:26:26.387Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application AUTH-SERVICE with eureka with status UP
+2026-04-09T14:26:26.390Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1775744786390, current=UP, previous=STARTING]
+2026-04-09T14:26:26.395Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/ad4837230038:AUTH-SERVICE:8081: registering service...
+2026-04-09T14:26:26.433Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2026-04-09T14:26:26.437Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8081
+2026-04-09T14:26:26.465Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : Started AuthServiceApplication in 23.782 seconds (process running for 25.563)
+2026-04-09T14:26:26.498Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/ad4837230038:AUTH-SERVICE:8081 - registration status: 204
+2026-04-09T14:26:56.361Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T14:26:56.362Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T14:26:56.364Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T14:26:56.366Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T14:26:56.371Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T14:26:56.373Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2026-04-09T14:26:56.373Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T14:26:56.389Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T14:43:47.489Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-09T14:43:47.491Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-09T14:43:47.494Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2026-04-09T14:43:47.892Z  INFO [AUTH-SERVICE,traceId=69d7bb23b1c719055e9b5393bf3eb8be,spanId=10241720994cb44b] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [69d7bb23b1c719055e9b5393bf3eb8be-10241720994cb44b] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 330 ms
+2026-04-09T14:44:18.140Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T14:46:18.364Z  INFO [AUTH-SERVICE,traceId=69d7bbba31eb1fb79a23d1e5602acb7b,spanId=eb1105743f463997] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-3] [69d7bbba31eb1fb79a23d1e5602acb7b-eb1105743f463997] in.cg.main.service.EmailService          : Registration email skipped because mail is disabled for raghav.singh120307@gmail.com
+2026-04-09T14:49:18.100Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T14:54:18.079Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T14:59:18.060Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T14:59:26.327Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application AUTH-SERVICE with eureka with status DOWN
+2026-04-09T14:59:26.329Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1775746766329, current=DOWN, previous=UP]
+2026-04-09T14:59:26.333Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/ad4837230038:AUTH-SERVICE:8081: registering service...
+2026-04-09T14:59:26.410Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-09T14:59:26.426Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-04-09T14:59:26.479Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-04-09T14:59:26.549Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.netflix.discovery.DiscoveryClient    : Shutting down DiscoveryClient ...
+2026-04-09T14:59:41.116Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : Starting AuthServiceApplication v1.0 using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+2026-04-09T14:59:41.144Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-04-09T14:59:49.653Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-09T14:59:50.721Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1022 ms. Found 3 JPA repository interfaces.
+2026-04-09T14:59:53.054Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.cloud.context.scope.GenericScope     : BeanFactory id=27b9e3ed-af57-3a88-adc9-0c153cc122d6
+2026-04-09T14:59:56.135Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-04-09T14:59:56.184Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-04-09T14:59:58.357Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-04-09T14:59:58.473Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-09T14:59:58.477Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-04-09T14:59:58.815Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-09T14:59:58.819Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 17192 ms
+2026-04-09T15:00:03.712Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-09T15:00:04.129Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-04-09T15:00:04.367Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-09T15:00:05.459Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-09T15:00:05.525Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-09T15:00:05.989Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1fce6eb4
+2026-04-09T15:00:05.993Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-09T15:00:07.878Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-09T15:00:07.983Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-09T15:00:09.592Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-09T15:00:09.600Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-04-09T15:00:09.920Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-09T15:00:11.624Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-09T15:00:14.136Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-04-09T15:00:16.522Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-04-09T15:00:16.848Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-04-09T15:00:17.220Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-04-09T15:00:17.373Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-04-09T15:00:17.389Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T15:00:17.426Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T15:00:17.428Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T15:00:17.429Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T15:00:17.430Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T15:00:17.431Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T15:00:17.433Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-04-09T15:00:17.435Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T15:00:17.942Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T15:00:17.946Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2026-04-09T15:00:17.957Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-04-09T15:00:17.962Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1775746817960 with initial instances count: 0
+2026-04-09T15:00:17.971Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application AUTH-SERVICE with eureka with status UP
+2026-04-09T15:00:17.973Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1775746817972, current=UP, previous=STARTING]
+2026-04-09T15:00:17.976Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/44f413a35cbc:AUTH-SERVICE:8081: registering service...
+2026-04-09T15:00:18.000Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2026-04-09T15:00:18.008Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8081
+2026-04-09T15:00:18.038Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : Started AuthServiceApplication in 39.06 seconds (process running for 41.919)
+2026-04-09T15:00:18.039Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/44f413a35cbc:AUTH-SERVICE:8081 - registration status: 204
+2026-04-09T15:00:47.947Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T15:00:47.949Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T15:00:47.950Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T15:00:47.951Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T15:00:47.952Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T15:00:47.953Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2026-04-09T15:00:47.954Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T15:00:47.979Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T15:05:17.420Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T15:10:17.401Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T16:13:14.759Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T16:17:31.033Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application AUTH-SERVICE with eureka with status DOWN
+2026-04-09T16:17:31.035Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1775751451035, current=DOWN, previous=UP]
+2026-04-09T16:17:31.036Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/44f413a35cbc:AUTH-SERVICE:8081: registering service...
+2026-04-09T16:17:31.093Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/44f413a35cbc:AUTH-SERVICE:8081 - registration status: 204
+2026-04-09T16:17:31.144Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-09T16:17:31.163Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-04-09T16:17:31.220Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-04-09T16:17:31.334Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.netflix.discovery.DiscoveryClient    : Shutting down DiscoveryClient ...
+2026-04-09T16:18:42.731Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : Starting AuthServiceApplication v1.0 using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+2026-04-09T16:18:42.764Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-04-09T16:18:51.019Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-09T16:18:51.617Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 561 ms. Found 3 JPA repository interfaces.
+2026-04-09T16:18:53.456Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.cloud.context.scope.GenericScope     : BeanFactory id=27b9e3ed-af57-3a88-adc9-0c153cc122d6
+2026-04-09T16:18:55.995Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-04-09T16:18:56.045Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-04-09T16:18:58.439Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-04-09T16:18:58.619Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-09T16:18:58.622Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-04-09T16:18:59.157Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-09T16:18:59.170Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 16122 ms
+2026-04-09T16:19:05.510Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-09T16:19:05.972Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-04-09T16:19:06.282Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-09T16:19:08.008Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-09T16:19:08.221Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-09T16:19:09.437Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3891b430
+2026-04-09T16:19:09.446Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-09T16:19:12.367Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-09T16:19:12.560Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-09T16:19:14.048Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-09T16:19:14.065Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-04-09T16:19:14.333Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-09T16:19:16.137Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-09T16:19:19.312Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-04-09T16:19:22.510Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-04-09T16:19:22.827Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-04-09T16:19:23.161Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-04-09T16:19:23.262Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-04-09T16:19:23.276Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T16:19:23.315Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T16:19:23.319Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T16:19:23.321Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T16:19:23.324Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T16:19:23.328Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T16:19:23.333Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-04-09T16:19:23.336Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T16:19:24.097Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T16:19:24.107Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2026-04-09T16:19:24.117Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-04-09T16:19:24.129Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1775751564127 with initial instances count: 0
+2026-04-09T16:19:24.148Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application AUTH-SERVICE with eureka with status UP
+2026-04-09T16:19:24.153Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1775751564152, current=UP, previous=STARTING]
+2026-04-09T16:19:24.161Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081: registering service...
+2026-04-09T16:19:24.236Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2026-04-09T16:19:24.240Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8081
+2026-04-09T16:19:24.288Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [main] [                                                 ] in.cg.main.AuthServiceApplication        : Started AuthServiceApplication in 43.629 seconds (process running for 46.227)
+2026-04-09T16:19:24.324Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081 - registration status: 204
+2026-04-09T16:19:54.105Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T16:19:54.109Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T16:19:54.110Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T16:19:54.111Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T16:19:54.112Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T16:19:54.114Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2026-04-09T16:19:54.116Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T16:19:54.154Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T16:24:23.312Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T16:57:33.082Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-09T16:57:33.085Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-09T16:57:33.096Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+2026-04-09T16:57:34.203Z  INFO [AUTH-SERVICE,traceId=69d7da7da52790781715f180f065f5ec,spanId=7bc1a7384d71a619] 1 --- [AUTH-SERVICE] [http-nio-8081-exec-1] [69d7da7da52790781715f180f065f5ec-7bc1a7384d71a619] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 789 ms
+2026-04-09T16:59:08.092Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:04:08.057Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:09:08.027Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:14:08.001Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:19:07.976Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:24:07.949Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:28:13.748Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-HeartbeatExecutor-%d] [                                                 ] c.n.d.s.t.d.RedirectingEurekaHttpClient  : Request execution error. endpoint=DefaultEndpoint{ serviceUrl='http://eureka-server:8761/eureka/} exception=I/O error on PUT request for "http://eureka-server:8761/eureka/apps/AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081": eureka-server: Name or service not known stacktrace=org.springframework.web.client.ResourceAccessException: I/O error on PUT request for "http://eureka-server:8761/eureka/apps/AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081": eureka-server: Name or service not known
+	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateEurekaHttpClient.sendHeartBeat(RestTemplateEurekaHttpClient.java:99)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.execute(RedirectingEurekaHttpClient.java:91)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:120)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
+	at com.netflix.discovery.DiscoveryClient.renew(DiscoveryClient.java:845)
+	at com.netflix.discovery.DiscoveryClient$HeartbeatThread.run(DiscoveryClient.java:1402)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.net.UnknownHostException: eureka-server: Name or service not known
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Unknown Source)
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(Unknown Source)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:144)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:450)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:113)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:116)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:87)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:55)
+	at org.apache.hc.client5.http.classic.HttpClient.executeOpen(HttpClient.java:183)
+	at org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:99)
+	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:112)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateTransportClientFactory.lambda$restTemplate$3(RestTemplateTransportClientFactory.java:170)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:88)
+	at org.springframework.http.client.InterceptingClientHttpRequest.executeInternal(InterceptingClientHttpRequest.java:72)
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889)
+	... 19 more
+
+2026-04-09T17:28:13.748Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] c.n.d.s.t.d.RedirectingEurekaHttpClient  : Request execution error. endpoint=DefaultEndpoint{ serviceUrl='http://eureka-server:8761/eureka/} exception=I/O error on GET request for "http://eureka-server:8761/eureka/apps/delta": eureka-server stacktrace=org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://eureka-server:8761/eureka/apps/delta": eureka-server
+	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateEurekaHttpClient.getApplicationsInternal(RestTemplateEurekaHttpClient.java:145)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateEurekaHttpClient.getDelta(RestTemplateEurekaHttpClient.java:155)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$7.execute(EurekaHttpClientDecorator.java:152)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.execute(RedirectingEurekaHttpClient.java:91)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.getDelta(EurekaHttpClientDecorator.java:149)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$7.execute(EurekaHttpClientDecorator.java:152)
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:120)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.getDelta(EurekaHttpClientDecorator.java:149)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$7.execute(EurekaHttpClientDecorator.java:152)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.getDelta(EurekaHttpClientDecorator.java:149)
+	at com.netflix.discovery.DiscoveryClient.getAndUpdateDelta(DiscoveryClient.java:1080)
+	at com.netflix.discovery.DiscoveryClient.fetchRegistry(DiscoveryClient.java:963)
+	at com.netflix.discovery.DiscoveryClient.refreshRegistry(DiscoveryClient.java:1473)
+	at com.netflix.discovery.DiscoveryClient$CacheRefreshThread.run(DiscoveryClient.java:1441)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.net.UnknownHostException: eureka-server
+	at java.base/java.net.InetAddress$CachedLookup.get(Unknown Source)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:144)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:450)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:113)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:116)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:87)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:55)
+	at org.apache.hc.client5.http.classic.HttpClient.executeOpen(HttpClient.java:183)
+	at org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:99)
+	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:112)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateTransportClientFactory.lambda$restTemplate$3(RestTemplateTransportClientFactory.java:170)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:88)
+	at org.springframework.http.client.InterceptingClientHttpRequest.executeInternal(InterceptingClientHttpRequest.java:72)
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889)
+	... 22 more
+
+2026-04-09T17:28:13.752Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-HeartbeatExecutor-%d] [                                                 ] c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on PUT request for "http://eureka-server:8761/eureka/apps/AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081": eureka-server: Name or service not known
+2026-04-09T17:28:13.753Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on GET request for "http://eureka-server:8761/eureka/apps/delta": eureka-server
+2026-04-09T17:28:13.796Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-HeartbeatExecutor-%d] [                                                 ] c.n.d.s.t.d.RedirectingEurekaHttpClient  : Request execution error. endpoint=DefaultEndpoint{ serviceUrl='http://eureka-server:8761/eureka/}, exception=I/O error on PUT request for "http://eureka-server:8761/eureka/apps/AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081": eureka-server stacktrace=org.springframework.web.client.ResourceAccessException: I/O error on PUT request for "http://eureka-server:8761/eureka/apps/AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081": eureka-server
+	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateEurekaHttpClient.sendHeartBeat(RestTemplateEurekaHttpClient.java:99)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.executeOnNewServer(RedirectingEurekaHttpClient.java:121)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.execute(RedirectingEurekaHttpClient.java:80)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:120)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
+	at com.netflix.discovery.DiscoveryClient.renew(DiscoveryClient.java:845)
+	at com.netflix.discovery.DiscoveryClient$HeartbeatThread.run(DiscoveryClient.java:1402)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.net.UnknownHostException: eureka-server
+	at java.base/java.net.InetAddress$CachedLookup.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:144)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:450)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:113)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:116)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:87)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:55)
+	at org.apache.hc.client5.http.classic.HttpClient.executeOpen(HttpClient.java:183)
+	at org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:99)
+	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:112)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateTransportClientFactory.lambda$restTemplate$3(RestTemplateTransportClientFactory.java:170)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:88)
+	at org.springframework.http.client.InterceptingClientHttpRequest.executeInternal(InterceptingClientHttpRequest.java:72)
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889)
+	... 20 more
+
+2026-04-09T17:28:13.801Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-HeartbeatExecutor-%d] [                                                 ] c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on PUT request for "http://eureka-server:8761/eureka/apps/AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081": eureka-server
+2026-04-09T17:28:13.803Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] c.n.d.s.t.d.RedirectingEurekaHttpClient  : Request execution error. endpoint=DefaultEndpoint{ serviceUrl='http://eureka-server:8761/eureka/}, exception=I/O error on GET request for "http://eureka-server:8761/eureka/apps/delta": eureka-server stacktrace=org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://eureka-server:8761/eureka/apps/delta": eureka-server
+	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateEurekaHttpClient.getApplicationsInternal(RestTemplateEurekaHttpClient.java:145)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateEurekaHttpClient.getDelta(RestTemplateEurekaHttpClient.java:155)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$7.execute(EurekaHttpClientDecorator.java:152)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.executeOnNewServer(RedirectingEurekaHttpClient.java:121)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.execute(RedirectingEurekaHttpClient.java:80)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.getDelta(EurekaHttpClientDecorator.java:149)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$7.execute(EurekaHttpClientDecorator.java:152)
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:120)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.getDelta(EurekaHttpClientDecorator.java:149)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$7.execute(EurekaHttpClientDecorator.java:152)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.getDelta(EurekaHttpClientDecorator.java:149)
+	at com.netflix.discovery.DiscoveryClient.getAndUpdateDelta(DiscoveryClient.java:1080)
+	at com.netflix.discovery.DiscoveryClient.fetchRegistry(DiscoveryClient.java:963)
+	at com.netflix.discovery.DiscoveryClient.refreshRegistry(DiscoveryClient.java:1473)
+	at com.netflix.discovery.DiscoveryClient$CacheRefreshThread.run(DiscoveryClient.java:1441)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.net.UnknownHostException: eureka-server
+	at java.base/java.net.InetAddress$CachedLookup.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:144)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:450)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:113)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:116)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:87)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:55)
+	at org.apache.hc.client5.http.classic.HttpClient.executeOpen(HttpClient.java:183)
+	at org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:99)
+	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:112)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateTransportClientFactory.lambda$restTemplate$3(RestTemplateTransportClientFactory.java:170)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:88)
+	at org.springframework.http.client.InterceptingClientHttpRequest.executeInternal(InterceptingClientHttpRequest.java:72)
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889)
+	... 23 more
+
+2026-04-09T17:28:13.806Z  WARN [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on GET request for "http://eureka-server:8761/eureka/apps/delta": eureka-server
+2026-04-09T17:28:13.810Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081 - was unable to refresh its cache! This periodic background refresh will be retried in 30 seconds. status = Cannot execute request on any known server stacktrace = com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.getDelta(EurekaHttpClientDecorator.java:149)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$7.execute(EurekaHttpClientDecorator.java:152)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.getDelta(EurekaHttpClientDecorator.java:149)
+	at com.netflix.discovery.DiscoveryClient.getAndUpdateDelta(DiscoveryClient.java:1080)
+	at com.netflix.discovery.DiscoveryClient.fetchRegistry(DiscoveryClient.java:963)
+	at com.netflix.discovery.DiscoveryClient.refreshRegistry(DiscoveryClient.java:1473)
+	at com.netflix.discovery.DiscoveryClient$CacheRefreshThread.run(DiscoveryClient.java:1441)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+2026-04-09T17:28:13.803Z ERROR [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-HeartbeatExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081 - was unable to send heartbeat!
+
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112) ~[eureka-client-2.0.3.jar!/:2.0.3]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89) ~[eureka-client-2.0.3.jar!/:2.0.3]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92) ~[eureka-client-2.0.3.jar!/:2.0.3]
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76) ~[eureka-client-2.0.3.jar!/:2.0.3]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89) ~[eureka-client-2.0.3.jar!/:2.0.3]
+	at com.netflix.discovery.DiscoveryClient.renew(DiscoveryClient.java:845) ~[eureka-client-2.0.3.jar!/:2.0.3]
+	at com.netflix.discovery.DiscoveryClient$HeartbeatThread.run(DiscoveryClient.java:1402) ~[eureka-client-2.0.3.jar!/:2.0.3]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) ~[na:na]
+	at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
+
+2026-04-09T17:28:44.016Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-HeartbeatExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081 - Re-registering apps/AUTH-SERVICE
+2026-04-09T17:28:44.017Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-HeartbeatExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081: registering service...
+2026-04-09T17:28:44.044Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-HeartbeatExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081 - registration status: 204
+2026-04-09T17:29:07.924Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:29:13.853Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-09T17:29:13.854Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-09T17:29:13.856Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-09T17:29:13.857Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-09T17:29:13.858Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-09T17:29:13.859Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2026-04-09T17:29:13.860Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-09T17:29:13.888Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-CacheRefreshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-09T17:34:07.886Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:39:07.849Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-09T17:40:11.768Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application AUTH-SERVICE with eureka with status DOWN
+2026-04-09T17:40:11.775Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1775756411775, current=DOWN, previous=UP]
+2026-04-09T17:40:11.785Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081: registering service...
+2026-04-09T17:40:11.810Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_AUTH-SERVICE/0c218dd2dd92:AUTH-SERVICE:8081 - registration status: 204
+2026-04-09T17:40:11.893Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-09T17:40:11.919Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-04-09T17:40:11.942Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-04-09T17:40:12.587Z  INFO [AUTH-SERVICE,traceId=,spanId=] 1 --- [AUTH-SERVICE] [SpringApplicationShutdownHook] [                                                 ] com.netflix.discovery.DiscoveryClient    : Shutting down DiscoveryClient ...

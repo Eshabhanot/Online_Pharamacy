@@ -22,7 +22,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // ✅ Generate Token (NEW API)
+   
     public String generateToken(String username, String role, Long userId) {
 
         Map<String, Object> claims = new HashMap<>();
@@ -38,18 +38,18 @@ public class JwtService {
                 .compact();
     }
 
-    // ✅ Extract Username
+    
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // ✅ Generic Claim Extractor
+   
     private <T> T extractClaim(String token, java.util.function.Function<Claims, T> resolver) {
         final Claims claims = extractAllClaims(token);
         return resolver.apply(claims);
     }
 
-    // ✅ FIXED METHOD (IMPORTANT)
+    
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
@@ -58,13 +58,13 @@ public class JwtService {
                 .getBody();
     }
 
-    // ✅ Validate Token
+    
     public boolean validateToken(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return userName.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    // ✅ Expiry Check
+  
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }

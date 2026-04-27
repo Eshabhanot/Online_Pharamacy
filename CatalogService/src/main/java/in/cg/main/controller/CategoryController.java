@@ -8,20 +8,18 @@ import in.cg.main.dto.CategoryDTO;
 import in.cg.main.service.CategoryService;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping({"/api/categories", "/api/catalog/categories"})
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    // ✅ Constructor Injection
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
-    // ── Get All Categories (Paginated) ───────────────────
+   
     @GetMapping
 
-    // ✅ Allow USER + ADMIN
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public Page<CategoryDTO> getAllCategories(
             @RequestParam(defaultValue = "0") int page,

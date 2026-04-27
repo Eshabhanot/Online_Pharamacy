@@ -54,4 +54,19 @@ class AdminDashboardControllerTest {
         assertSame(tracking, response.getBody());
         verify(adminDashboardService).getOrderTracking();
     }
+
+    @Test
+    void updateOrderDeliveryStatus_returnsOkResponse() {
+        AdminOrderTrackingResponse tracking = new AdminOrderTrackingResponse();
+        tracking.setOrderId(4L);
+        tracking.setStatus("Packed");
+        when(adminDashboardService.updateOrderDeliveryStatus(4L, "PACKED")).thenReturn(tracking);
+
+        ResponseEntity<AdminOrderTrackingResponse> response =
+                adminDashboardController.updateOrderDeliveryStatus(4L, "PACKED");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertSame(tracking, response.getBody());
+        verify(adminDashboardService).updateOrderDeliveryStatus(4L, "PACKED");
+    }
 }

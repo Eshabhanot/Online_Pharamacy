@@ -81,12 +81,13 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         boolean needsRx = cart.getItems().stream().anyMatch(CartItem::isRequiresPrescription);
         PrescriptionDTO prescription = null;
+        OrderStatus initialStatus = OrderStatus.PAYMENT_PENDING;
         if (needsRx) {
             if (req.getPrescriptionId() == null) {
                 throw new RuntimeException("Prescription is required for this order");
             }
             prescription = fetchPrescriptionOrThrow(req.getPrescriptionId());
-            validatePrescriptionForCustomer(customerId, prescription);
+            initialStatus = resolveInitialStatusForPrescription(customerId, prescription);
         }
 
         for (CartItem item : cart.getItems()) {
@@ -110,7 +111,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         if (needsRx) {
             order.setPrescriptionId(req.getPrescriptionId());
         }
-        order.setStatus(OrderStatus.PAYMENT_PENDING);
+        order.setStatus(initialStatus);
 
         BigDecimal subtotal = BigDecimal.ZERO;
         for (CartItem ci : cart.getItems()) {
@@ -141,12 +142,11 @@ public class CheckoutServiceImpl implements CheckoutService {
         String customerEmail = resolveCustomerEmail(saved.getCustomerId(), fallbackCustomerEmail);
         notificationService.sendOrderNotification(
                 saved.getId(), customerEmail, OrderStatusFormatter.toDisplayName(saved.getStatus()),
-                "Order " + saved.getOrderNumber() + " placed successfully");
+                buildPlacementMessage(saved));
         emailService.sendOrderEmail(
                 customerEmail,
                 "Order placed successfully",
-                "Your order " + saved.getOrderNumber() + " has been placed with status "
-                        + OrderStatusFormatter.toDisplayName(saved.getStatus()) + "."
+                buildPlacementEmailBody(saved)
         );
 
         return buildOrderResponse(saved);
@@ -176,6 +176,32 @@ public class CheckoutServiceImpl implements CheckoutService {
         );
 
         return buildOrderResponse(saved);
+    }
+
+    @Override
+    public void syncPrescriptionReview(Long prescriptionId, boolean approved) {
+        List<Order> pendingOrders = orderRepository.findByPrescriptionIdAndStatus(
+                prescriptionId, OrderStatus.PRESCRIPTION_PENDING);
+
+        for (Order order : pendingOrders) {
+            OrderStatus targetStatus = approved ? OrderStatus.PAYMENT_PENDING : OrderStatus.PRESCRIPTION_REJECTED;
+            order.setStatus(targetStatus);
+            Order saved = orderRepository.save(order);
+
+            String customerEmail = resolveCustomerEmail(saved.getCustomerId(), null);
+            String displayStatus = OrderStatusFormatter.toDisplayName(targetStatus);
+            notificationService.sendOrderNotification(
+                    saved.getId(),
+                    customerEmail,
+                    displayStatus,
+                    "Prescription review completed for order " + saved.getOrderNumber()
+                            + ". Current status: " + displayStatus);
+            emailService.sendOrderEmail(
+                    customerEmail,
+                    "Prescription review completed",
+                    "Your order " + saved.getOrderNumber() + " is now " + displayStatus + "."
+            );
+        }
     }
 
     private void validateTransition(OrderStatus current, OrderStatus next) {
@@ -261,7 +287,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
-    private void validatePrescriptionForCustomer(Long customerId, PrescriptionDTO prescription) {
+    private OrderStatus resolveInitialStatusForPrescription(Long customerId, PrescriptionDTO prescription) {
         if (prescription == null || prescription.getCustomerId() == null
                 || !customerId.equals(prescription.getCustomerId())) {
             throw new RuntimeException("Prescription does not belong to this customer");
@@ -273,16 +299,22 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
 
         if ("PENDING".equalsIgnoreCase(status)) {
-            throw new RuntimeException("Prescription is still pending review");
+            throw new RuntimeException("Prescription is still pending review. Order cannot be placed yet.");
         }
 
         if ("REJECTED".equalsIgnoreCase(status)) {
             throw new RuntimeException("Prescription was rejected");
         }
 
+        if ("APPROVED".equalsIgnoreCase(status)) {
+            return OrderStatus.PAYMENT_PENDING;
+        }
+
         if (!"APPROVED".equalsIgnoreCase(status)) {
             throw new RuntimeException("Unsupported prescription status: " + status);
         }
+
+        return OrderStatus.PAYMENT_PENDING;
     }
 
     private List<AuthAddressResponse> fetchAuthAddressesOrThrow(Long customerId) {
@@ -374,5 +406,21 @@ public class CheckoutServiceImpl implements CheckoutService {
                 .deliveryAddress(addressDto)
                 .payment(paymentDto)
                 .build();
+    }
+
+    private String buildPlacementMessage(Order order) {
+        if (order.getStatus() == OrderStatus.PRESCRIPTION_PENDING) {
+            return "Order " + order.getOrderNumber() + " created and waiting for prescription review";
+        }
+        return "Order " + order.getOrderNumber() + " placed successfully";
+    }
+
+    private String buildPlacementEmailBody(Order order) {
+        if (order.getStatus() == OrderStatus.PRESCRIPTION_PENDING) {
+            return "Your order " + order.getOrderNumber()
+                    + " has been created and is waiting for prescription review.";
+        }
+        return "Your order " + order.getOrderNumber() + " has been placed with status "
+                + OrderStatusFormatter.toDisplayName(order.getStatus()) + ".";
     }
 }

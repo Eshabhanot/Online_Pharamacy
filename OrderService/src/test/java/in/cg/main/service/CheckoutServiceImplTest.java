@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -153,7 +154,7 @@ class CheckoutServiceImplTest {
     }
 
     @Test
-    void startCheckout_pendingPrescription_throws() {
+    void startCheckout_pendingPrescription_throwsAndDoesNotPlaceOrder() {
         cartItem.setRequiresPrescription(true);
         cartItem.setQuantity(6);
         request.setPrescriptionId(500L);
@@ -166,9 +167,12 @@ class CheckoutServiceImplTest {
 
         when(cartRepository.findByCustomerId(11L)).thenReturn(Optional.of(cart));
         when(addressRepository.findByIdAndCustomerId(99L, 11L)).thenReturn(Optional.of(address));
-
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> checkoutService.startCheckout(11L, null, request));
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> checkoutService.startCheckout(11L, null, request));
         assertTrue(ex.getMessage().contains("pending review"));
+        verify(orderRepository, never()).save(any(Order.class));
+        verify(notificationService, never()).sendOrderNotification(anyLong(), anyString(), anyString(), anyString());
+        verify(emailService, never()).sendOrderEmail(anyString(), anyString(), anyString());
     }
 
     @Test
@@ -235,5 +239,51 @@ class CheckoutServiceImplTest {
         assertNull(order.getDeliveredAt());
         verify(notificationService).sendOrderNotification(eq(2L), eq("unknown@customer.local"), eq("Paid"), contains("status updated"));
         verify(emailService).sendOrderEmail(eq("unknown@customer.local"), contains("Order status"), contains("Paid"));
+    }
+
+    @Test
+    void syncPrescriptionReview_approved_movesPendingOrdersToPaymentPending() {
+        Order order = new Order();
+        order.setId(20L);
+        order.setOrderNumber("ORD-20");
+        order.setCustomerId(11L);
+        order.setStatus(OrderStatus.PRESCRIPTION_PENDING);
+        when(orderRepository.findByPrescriptionIdAndStatus(500L, OrderStatus.PRESCRIPTION_PENDING))
+                .thenReturn(List.of(order));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        checkoutService.syncPrescriptionReview(500L, true);
+
+        assertEquals(OrderStatus.PAYMENT_PENDING, order.getStatus());
+        verify(notificationService).sendOrderNotification(eq(20L), eq("unknown@customer.local"),
+                eq("Payment Pending"), contains("Prescription review completed"));
+    }
+
+    @Test
+    void syncPrescriptionReview_rejected_movesPendingOrdersToRejected() {
+        Order order = new Order();
+        order.setId(21L);
+        order.setOrderNumber("ORD-21");
+        order.setCustomerId(11L);
+        order.setStatus(OrderStatus.PRESCRIPTION_PENDING);
+        when(orderRepository.findByPrescriptionIdAndStatus(501L, OrderStatus.PRESCRIPTION_PENDING))
+                .thenReturn(List.of(order));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        checkoutService.syncPrescriptionReview(501L, false);
+
+        assertEquals(OrderStatus.PRESCRIPTION_REJECTED, order.getStatus());
+        verify(notificationService).sendOrderNotification(eq(21L), eq("unknown@customer.local"),
+                eq("Prescription Rejected"), contains("Prescription review completed"));
+    }
+
+    private MedicineDTO medicineForPrescriptionOrder() {
+        MedicineDTO medicine = new MedicineDTO();
+        medicine.setId(100L);
+        medicine.setName("Paracetamol");
+        medicine.setStock(10);
+        medicine.setRequiresPrescription(true);
+        medicine.setPrice(100.0);
+        return medicine;
     }
 }

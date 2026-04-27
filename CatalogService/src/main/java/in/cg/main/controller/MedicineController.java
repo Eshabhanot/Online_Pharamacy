@@ -9,17 +9,17 @@ import in.cg.main.dto.MedicineDTO;
 import in.cg.main.service.MedicineService;
 
 @RestController
-@RequestMapping("/api/medicines")
+@RequestMapping({"/api/medicines"})
 public class MedicineController {
 
     private final MedicineService medicineService;
 
-    // ✅ Constructor Injection
+  
     public MedicineController(MedicineService medicineService) {
         this.medicineService = medicineService;
     }
 
-    // ── 1. Search + Filter + Pagination ─────────────────────
+   
     @GetMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Page<MedicineDTO>> searchMedicines(
@@ -33,7 +33,7 @@ public class MedicineController {
         );
     }
 
-    // ── 2. Get Medicine by ID ──────────────────────────────
+   
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<MedicineDTO> getMedicineById(@PathVariable Long id) {

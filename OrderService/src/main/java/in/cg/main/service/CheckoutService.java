@@ -10,4 +10,6 @@ public interface CheckoutService {
     OrderResponse startCheckout(Long customerId, String fallbackCustomerEmail, CheckoutRequest req);
 
     OrderResponse updateStatus(Long orderId, OrderStatus newStatus);
+
+    void syncPrescriptionReview(Long prescriptionId, boolean approved);
 }

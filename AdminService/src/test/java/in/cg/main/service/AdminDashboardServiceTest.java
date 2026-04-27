@@ -17,6 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,6 +39,7 @@ class AdminDashboardServiceTest {
     @Mock private InventoryRepository inventoryRepository;
     @Mock private PrescriptionRepository prescriptionRepository;
     @Mock private RestTemplate restTemplate;
+    @Mock private DiscoveryClient discoveryClient;
     
     private AdminDashboardService adminDashboardService;
 
@@ -46,15 +50,25 @@ class AdminDashboardServiceTest {
                 inventoryRepository,
                 prescriptionRepository,
                 restTemplate,
+                discoveryClient,
+                "http://catalog-service:8082",
                 ORDER_SERVICE_BASE_URL
         );
+        when(discoveryClient.getInstances(anyString())).thenReturn(Collections.emptyList());
     }
 
     @Test
     void getDashboard_success() {
 
-        when(prescriptionRepository.countByStatus(PrescriptionStatus.PENDING))
-                .thenReturn(5L);
+        when(restTemplate.getForObject(contains("/api/prescriptions/internal/pending"),
+                eq(AdminDashboardService.PrescriptionSummary[].class)))
+                .thenReturn(new AdminDashboardService.PrescriptionSummary[] {
+                        new AdminDashboardService.PrescriptionSummary(),
+                        new AdminDashboardService.PrescriptionSummary(),
+                        new AdminDashboardService.PrescriptionSummary(),
+                        new AdminDashboardService.PrescriptionSummary(),
+                        new AdminDashboardService.PrescriptionSummary()
+                });
 
         Medicine medicine = new Medicine();
         medicine.setId(1L);
@@ -102,8 +116,9 @@ class AdminDashboardServiceTest {
     @Test
     void getDashboard_orderServiceDown() {
 
-        when(prescriptionRepository.countByStatus(PrescriptionStatus.PENDING))
-                .thenReturn(0L);
+        when(restTemplate.getForObject(contains("/api/prescriptions/internal/pending"),
+                eq(AdminDashboardService.PrescriptionSummary[].class)))
+                .thenThrow(new RestClientException("Catalog down"));
 
         when(inventoryRepository.findByQuantityLessThanAndStatus(10, InventoryStatus.ACTIVE))
                 .thenReturn(Collections.emptyList());
@@ -122,14 +137,17 @@ class AdminDashboardServiceTest {
 
         assertNotNull(result);
         assertEquals(0, result.getTotalOrdersToday());
-        assertEquals(BigDecimal.ZERO, result.getRevenueToday());
+        assertNull(result.getRevenueToday());
         assertEquals(List.of(), result.getRecentOrderTracking());
     }
 
     @Test
     void getDashboard_orderStatsNull_keepsDefaultOrderValues() {
-        when(prescriptionRepository.countByStatus(PrescriptionStatus.PENDING))
-            .thenReturn(1L);
+        when(restTemplate.getForObject(contains("/api/prescriptions/internal/pending"),
+                eq(AdminDashboardService.PrescriptionSummary[].class)))
+            .thenReturn(new AdminDashboardService.PrescriptionSummary[] {
+                    new AdminDashboardService.PrescriptionSummary()
+            });
         when(inventoryRepository.findByQuantityLessThanAndStatus(10, InventoryStatus.ACTIVE))
             .thenReturn(Collections.emptyList());
         when(inventoryRepository.findByExpiryDateBeforeAndStatusNot(any(), eq(InventoryStatus.EXPIRED)))
@@ -151,5 +169,38 @@ class AdminDashboardServiceTest {
         assertEquals(1, result.getPendingPrescriptions());
         assertEquals(8, result.getTotalActiveMedicines());
         assertEquals(Collections.emptyList(), result.getRecentOrderTracking());
+    }
+
+    @Test
+    void updateOrderDeliveryStatus_returnsUpdatedTracking() {
+        AdminOrderTrackingResponse tracking = new AdminOrderTrackingResponse();
+        tracking.setOrderId(15L);
+        tracking.setStatus("Delivered");
+
+        when(restTemplate.exchange(
+                any(org.springframework.http.RequestEntity.class),
+                eq(AdminOrderTrackingResponse.class)))
+                .thenReturn(new ResponseEntity<>(tracking, HttpStatus.OK));
+
+        AdminOrderTrackingResponse result = adminDashboardService.updateOrderDeliveryStatus(15L, "DELIVERED");
+
+        assertNotNull(result);
+        assertEquals(15L, result.getOrderId());
+        assertEquals("Delivered", result.getStatus());
+    }
+
+    @Test
+    void getOrderTrackingById_returnsOrderTracking() {
+        AdminOrderTrackingResponse tracking = new AdminOrderTrackingResponse();
+        tracking.setOrderId(20L);
+
+        when(restTemplate.getForObject(contains("/api/internal/orders/20/tracking"),
+                eq(AdminOrderTrackingResponse.class)))
+                .thenReturn(tracking);
+
+        AdminOrderTrackingResponse result = adminDashboardService.getOrderTrackingById(20L);
+
+        assertNotNull(result);
+        assertEquals(20L, result.getOrderId());
     }
 }

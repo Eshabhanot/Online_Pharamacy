@@ -65,6 +65,16 @@ class PrescriptionControllerTest {
         verify(prescriptionService).getPendingPrescription();
     }
 
+//    @Test
+//    void getInternalPendingPrescriptions_returnsList() {
+//        when(prescriptionService.getPendingPrescription()).thenReturn(List.of(new Prescription()));
+//
+//        List<Prescription> result = prescriptionController.getPendingPrescriptions();
+//
+//        assertEquals(1, result.size());
+//        verify(prescriptionService).getPendingPrescription();
+//    }
+
     @Test
     void reviewPrescription_passesArgs() {
         Prescription p = new Prescription();
@@ -75,5 +85,17 @@ class PrescriptionControllerTest {
 
         assertEquals(5L, result.getId());
         verify(prescriptionService).reviewPrescription(5L, false, "bad image");
+    }
+
+    @Test
+    void reviewPrescriptionInternal_passesArgs() {
+        Prescription p = new Prescription();
+        p.setId(6L);
+        when(prescriptionService.reviewPrescription(6L, true, null)).thenReturn(p);
+
+        Prescription result = prescriptionController.reviewPrescriptionInternal(6L, true, null);
+
+        assertEquals(6L, result.getId());
+        verify(prescriptionService).reviewPrescription(6L, true, null);
     }
 }

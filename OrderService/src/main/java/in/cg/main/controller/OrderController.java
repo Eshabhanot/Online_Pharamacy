@@ -3,6 +3,7 @@ package in.cg.main.controller;
 import in.cg.main.dto.OrderResponse;
 import in.cg.main.dto.OrderTrackingResponse;
 import in.cg.main.enums.OrderStatus;
+import in.cg.main.security.JwtService;
 import in.cg.main.security.RequestCustomerResolver;
 import in.cg.main.service.CheckoutService;
 import in.cg.main.service.OrderService;
@@ -24,13 +25,16 @@ public class OrderController {
     private final CheckoutService checkoutService;
     private final OrderService orderService;
     private final RequestCustomerResolver requestCustomerResolver;
+    private final JwtService jwtService;
 
     public OrderController(CheckoutService checkoutService,
                            OrderService orderService,
-                           RequestCustomerResolver requestCustomerResolver) {
+                           RequestCustomerResolver requestCustomerResolver,
+                           JwtService jwtService) {
         this.checkoutService = checkoutService;
         this.orderService = orderService;
         this.requestCustomerResolver = requestCustomerResolver;
+        this.jwtService = jwtService;
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -52,6 +56,9 @@ public class OrderController {
             @RequestHeader(value = "X-Customer-Id", required = false) Long customerIdHeader,
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
 
+        if (isAdminRequest(authorizationHeader)) {
+            return ResponseEntity.ok(orderService.getOrderByIdForAdmin(id));
+        }
         Long customerId = requestCustomerResolver.resolve(customerIdHeader, authorizationHeader);
         return ResponseEntity.ok(orderService.getOrderById(id, customerId));
     }
@@ -63,20 +70,26 @@ public class OrderController {
             @RequestHeader(value = "X-Customer-Id", required = false) Long customerIdHeader,
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
 
+        if (isAdminRequest(authorizationHeader)) {
+            return ResponseEntity.ok(orderService.getOrderTrackingForAdmin(id));
+        }
         Long customerId = requestCustomerResolver.resolve(customerIdHeader, authorizationHeader);
         return ResponseEntity.ok(orderService.getOrderTracking(id, customerId));
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @GetMapping("/tracking/{id}")
-    public ResponseEntity<OrderTrackingResponse> getOrderTrackingAlias(
-            @PathVariable Long id,
-            @RequestHeader(value = "X-Customer-Id", required = false) Long customerIdHeader,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-
-        Long customerId = requestCustomerResolver.resolve(customerIdHeader, authorizationHeader);
-        return ResponseEntity.ok(orderService.getOrderTracking(id, customerId));
-    }
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//    @GetMapping("/tracking/{id}")
+//    public ResponseEntity<OrderTrackingResponse> getOrderTrackingAlias(
+//            @PathVariable Long id,
+//            @RequestHeader(value = "X-Customer-Id", required = false) Long customerIdHeader,
+//            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+//
+//        if (isAdminRequest(authorizationHeader)) {
+//            return ResponseEntity.ok(orderService.getOrderTrackingForAdmin(id));
+//        }
+//        Long customerId = requestCustomerResolver.resolve(customerIdHeader, authorizationHeader);
+//        return ResponseEntity.ok(orderService.getOrderTracking(id, customerId));
+//    }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PutMapping("/{id}/cancel")
@@ -87,5 +100,17 @@ public class OrderController {
 
         requestCustomerResolver.resolve(customerIdHeader, authorizationHeader);
         return ResponseEntity.ok(checkoutService.updateStatus(id, OrderStatus.CUSTOMER_CANCELLED));
+    }
+
+    private boolean isAdminRequest(String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return false;
+        }
+        try {
+            String role = jwtService.extractRole(authorizationHeader.substring(7));
+            return role != null && role.replace("ROLE_", "").equalsIgnoreCase("ADMIN");
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }

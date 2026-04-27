@@ -4,6 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -34,4 +35,7 @@ public interface CatalogClient {
             @RequestParam("userId") Long userId,
             @RequestPart("file") MultipartFile file
     );
+
+    @PutMapping("/api/inventory/reduce")
+    void reduceStock(@RequestParam Long medicineId, @RequestParam int quantity);
 }

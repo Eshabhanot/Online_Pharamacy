@@ -36,4 +36,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     long countByStatusAndDeliveredAtBetween(OrderStatus status, LocalDateTime start, LocalDateTime end);
 
     Page<Order> findAllByOrderByPlacedAtDesc(Pageable pageable);
+
+    List<Order> findByPrescriptionIdAndStatus(Long prescriptionId, OrderStatus status);
 }

@@ -1,5 +1,0 @@
-package in.cg.main.dto;
-
-public class OrderResponse {
-
-}

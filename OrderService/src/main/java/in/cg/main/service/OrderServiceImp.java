@@ -3,6 +3,7 @@ package in.cg.main.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -63,6 +64,13 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    public OrderResponse getOrderByIdForAdmin(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        return mapToDto(order);
+    }
+
+    @Override
     public OrderTrackingResponse getOrderTracking(Long orderId, Long customerId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
@@ -71,6 +79,13 @@ public class OrderServiceImp implements OrderService {
             throw new RuntimeException("Unauthorized access");
         }
 
+        return mapTrackingDto(order);
+    }
+
+    @Override
+    public OrderTrackingResponse getOrderTrackingForAdmin(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         return mapTrackingDto(order);
     }
 
@@ -166,7 +181,69 @@ public class OrderServiceImp implements OrderService {
         tracking.setDeliverySlot(order.getDeliverySlot());
         tracking.setPlacedAt(order.getPlacedAt());
         tracking.setDeliveredAt(order.getDeliveredAt());
+        tracking.setPrescriptionId(order.getPrescriptionId());
+        tracking.setSubtotal(order.getSubtotal());
+        tracking.setDeliveryCharge(order.getDeliveryCharge());
+        tracking.setTotalAmount(order.getTotalAmount());
+        tracking.setDeliveryAddress(mapTrackingAddress(order));
+        tracking.setItems(mapTrackingItems(order));
+        tracking.setStatusTimeline(buildStatusTimeline(order));
         return tracking;
+    }
+
+    private OrderTrackingResponse.AddressDto mapTrackingAddress(Order order) {
+        if (order.getAddress() == null) {
+            return null;
+        }
+        OrderTrackingResponse.AddressDto dto = new OrderTrackingResponse.AddressDto();
+        dto.setFullName(order.getAddress().getFullName());
+        dto.setAddressLine1(order.getAddress().getAddressLine1());
+        dto.setCity(order.getAddress().getCity());
+        dto.setPincode(order.getAddress().getPincode());
+        return dto;
+    }
+
+    private List<OrderTrackingResponse.OrderItemDto> mapTrackingItems(Order order) {
+        return order.getItems().stream()
+                .map(item -> {
+                    OrderTrackingResponse.OrderItemDto dto = new OrderTrackingResponse.OrderItemDto();
+                    dto.setMedicineName(item.getMedicineName());
+                    dto.setQuantity(item.getQuantity());
+                    dto.setUnitPrice(item.getUnitPrice());
+                    dto.setTotalPrice(item.getTotalPrice());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<OrderTrackingResponse.StatusStepDto> buildStatusTimeline(Order order) {
+        List<OrderStatus> flow = new ArrayList<>();
+        if (order.getPrescriptionId() != null) {
+            flow.add(OrderStatus.PRESCRIPTION_PENDING);
+            flow.add(OrderStatus.PRESCRIPTION_APPROVED);
+        }
+        flow.add(OrderStatus.PAYMENT_PENDING);
+        flow.add(OrderStatus.PAID);
+        flow.add(OrderStatus.PACKED);
+        flow.add(OrderStatus.OUT_FOR_DELIVERY);
+        flow.add(OrderStatus.DELIVERED);
+
+        if (!flow.contains(order.getStatus())) {
+            flow.add(order.getStatus());
+        }
+
+        int currentIndex = flow.indexOf(order.getStatus());
+        List<OrderTrackingResponse.StatusStepDto> timeline = new ArrayList<>();
+        for (int index = 0; index < flow.size(); index++) {
+            OrderStatus status = flow.get(index);
+            OrderTrackingResponse.StatusStepDto step = new OrderTrackingResponse.StatusStepDto();
+            step.setCode(status.name());
+            step.setLabel(OrderStatusFormatter.toDisplayName(status));
+            step.setCompleted(currentIndex > index);
+            step.setCurrent(currentIndex == index);
+            timeline.add(step);
+        }
+        return timeline;
     }
 
     private String fetchCustomerEmailQuietly(Long customerId) {

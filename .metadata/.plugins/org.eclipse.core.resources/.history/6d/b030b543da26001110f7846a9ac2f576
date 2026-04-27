@@ -1,5 +1,0 @@
-package in.cg.main.config;
-
-public class JwtFilter {
-
-}

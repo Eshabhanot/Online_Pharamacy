@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 import in.cg.main.service.AdminReportService;
 
 @RestController
@@ -19,6 +21,26 @@ public class AdminReportController {
 
     public AdminReportController(AdminReportService adminReportService) {
         this.adminReportService = adminReportService;
+    }
+
+    @GetMapping("/sales")
+    public ResponseEntity<Map<String, Object>> getSalesReport() {
+        return ResponseEntity.ok(adminReportService.getSalesReport());
+    }
+
+    @GetMapping("/inventory")
+    public ResponseEntity<Map<String, Object>> getInventoryReport() {
+        return ResponseEntity.ok(adminReportService.getInventoryReport());
+    }
+
+    @GetMapping("/prescriptions")
+    public ResponseEntity<Map<String, Object>> getPrescriptionVolumeReport() {
+        return ResponseEntity.ok(adminReportService.getPrescriptionVolumeReport());
+    }
+
+    @GetMapping("/expiries")
+    public ResponseEntity<Map<String, Object>> getExpiryReport() {
+        return ResponseEntity.ok(adminReportService.getExpiryReport());
     }
 
     // GET /api/admin/reports/medicines/export

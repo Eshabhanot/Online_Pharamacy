@@ -130,5 +130,19 @@ public class OrderServiceImpTest {
         assertEquals(1, response.size());
         assertEquals("track@test.com", response.get(0).getCustomerEmail());
         assertEquals("Payment Pending", response.get(0).getStatus());
+        assertNotNull(response.get(0).getStatusTimeline());
+        assertFalse(response.get(0).getStatusTimeline().isEmpty());
+    }
+
+    @Test
+    void testGetOrderTracking_containsOrderDetailsAndStatusTimeline() {
+        when(orderRepository.findById(100L)).thenReturn(Optional.of(order));
+
+        OrderTrackingResponse response = orderService.getOrderTracking(100L, 1L);
+
+        assertEquals(100L, response.getOrderId());
+        assertEquals(new BigDecimal("100.00"), response.getSubtotal());
+        assertEquals(new BigDecimal("150.00"), response.getTotalAmount());
+        assertNotNull(response.getStatusTimeline());
     }
 }

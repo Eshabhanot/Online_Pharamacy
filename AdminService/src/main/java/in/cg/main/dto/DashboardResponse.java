@@ -14,6 +14,7 @@ public class DashboardResponse {
     private long expiringBatchesIn30Days;
     private long totalActiveMedicines;
     private List<AdminOrderTrackingResponse> recentOrderTracking;
+    private List<TodayOrderSummary> todaysOrders;
 
     public long getTotalOrdersToday() { return totalOrdersToday; }
     public long getPendingOrders() { return pendingOrders; }
@@ -24,6 +25,7 @@ public class DashboardResponse {
     public long getExpiringBatchesIn30Days() { return expiringBatchesIn30Days; }
     public long getTotalActiveMedicines() { return totalActiveMedicines; }
     public List<AdminOrderTrackingResponse> getRecentOrderTracking() { return recentOrderTracking; }
+    public List<TodayOrderSummary> getTodaysOrders() { return todaysOrders; }
 
     public void setTotalOrdersToday(long v) { this.totalOrdersToday = v; }
     public void setPendingOrders(long v) { this.pendingOrders = v; }
@@ -35,5 +37,33 @@ public class DashboardResponse {
     public void setTotalActiveMedicines(long v) { this.totalActiveMedicines = v; }
     public void setRecentOrderTracking(List<AdminOrderTrackingResponse> recentOrderTracking) {
         this.recentOrderTracking = recentOrderTracking;
+    }
+    public void setTodaysOrders(List<TodayOrderSummary> todaysOrders) {
+        this.todaysOrders = todaysOrders;
+    }
+
+    public static class TodayOrderSummary {
+        private Long orderId;
+        private String orderNumber;
+        private String customerEmail;
+        private String status;
+        private BigDecimal totalAmount;
+        private int itemCount;
+        private String placedAt;
+
+        public Long getOrderId() { return orderId; }
+        public void setOrderId(Long orderId) { this.orderId = orderId; }
+        public String getOrderNumber() { return orderNumber; }
+        public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
+        public String getCustomerEmail() { return customerEmail; }
+        public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+        public BigDecimal getTotalAmount() { return totalAmount; }
+        public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+        public int getItemCount() { return itemCount; }
+        public void setItemCount(int itemCount) { this.itemCount = itemCount; }
+        public String getPlacedAt() { return placedAt; }
+        public void setPlacedAt(String placedAt) { this.placedAt = placedAt; }
     }
 }

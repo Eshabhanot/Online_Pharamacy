@@ -24,7 +24,6 @@ public class CartServiceImpl implements CartService {
         this.cartRepository = cartRepository;
     }
 
-    // ✅ Get or create cart
     @Override
     public Cart getOrCreateCart(Long customerId) {
         return cartRepository.findByCustomerId(customerId)
@@ -35,14 +34,14 @@ public class CartServiceImpl implements CartService {
                 });
     }
 
-    // ✅ Get cart
+  
     @Override
     public CartResponse getCart(Long customerId) {
         Cart cart = getOrCreateCart(customerId);
         return buildCartResponse(cart);
     }
 
-    // ✅ Add item (FINAL)
+   
     @Override
     public CartResponse addItem(Long customerId,
                                 CartItemRequest req,
@@ -89,7 +88,7 @@ public class CartServiceImpl implements CartService {
         return buildCartResponse(cart);
     }
 
-    // ✅ Update item
+   
     @Override
     public CartResponse updateItem(Long customerId, Long cartItemId, int quantity) {
 
@@ -110,7 +109,7 @@ public class CartServiceImpl implements CartService {
         return buildCartResponse(cart);
     }
 
-    // ✅ Remove item
+  
     @Override
     public CartResponse removeItem(Long customerId, Long cartItemId) {
 
@@ -127,7 +126,7 @@ public class CartServiceImpl implements CartService {
         return buildCartResponse(cart);
     }
 
-    // ✅ Clear cart
+   
     @Override
     public void clearCart(Long customerId) {
         cartRepository.findByCustomerId(customerId)
@@ -137,7 +136,7 @@ public class CartServiceImpl implements CartService {
                 });
     }
 
-    // ================= DTO BUILDER =================
+    
 
     private CartResponse buildCartResponse(Cart cart) {
 

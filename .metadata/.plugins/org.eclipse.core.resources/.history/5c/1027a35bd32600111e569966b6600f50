@@ -1,8 +1,0 @@
-package in.cg.enums;
-
-public enum InventoryStatus {
-	 ACTIVE,
-	 LOW_STOCK,
-	 EXPIRED,
-	 DISCONTINUED
-}

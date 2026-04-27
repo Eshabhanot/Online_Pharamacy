@@ -14,13 +14,13 @@ import in.cg.main.entities.Prescription;
 import in.cg.main.service.PrescriptionService;
 
 @RestController
-@RequestMapping("/api/prescriptions")
+@RequestMapping({"/api/prescriptions"})
 public class PrescriptionController {
 
     @Autowired
     private PrescriptionService prescriptionService;
 
-    // ── 1. Upload Prescription ───────────────────────────
+ 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('USER')")
     public PrescriptionUploadResponse uploadPrescription(
@@ -41,21 +41,35 @@ public class PrescriptionController {
         return prescriptionService.getById(id);
     }
 
-    // ── 2. Get Prescriptions by User ─────────────────────
+    @GetMapping("/internal/pending")
+    public List<Prescription> getInternalPendingPrescriptions() {
+        return prescriptionService.getPendingPrescription();
+    }
+
+    @PutMapping("/internal/{id}/review")
+    public Prescription reviewPrescriptionInternal(
+            @PathVariable Long id,
+            @RequestParam boolean approved,
+            @RequestParam(required = false) String rejectionReason) {
+
+        return prescriptionService.reviewPrescription(id, approved, rejectionReason);
+    }
+
+    
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasRole('USER')")
     public List<Prescription> getByUserId(@PathVariable Long userId) {
         return prescriptionService.getByUserId(userId);
     }
 
-    // ── 3. Get Pending Prescriptions (Admin) ─────────────
+
     @GetMapping("/pending")
     @PreAuthorize("hasRole('ADMIN')")
     public List<Prescription> getPendingPrescriptions() {
         return prescriptionService.getPendingPrescription();
     }
 
-    // ── 4. Review Prescription (Approve / Reject) ────────
+   
     @PutMapping("/review/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public Prescription reviewPrescription(

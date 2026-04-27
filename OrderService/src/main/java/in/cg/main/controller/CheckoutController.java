@@ -76,7 +76,7 @@ public class CheckoutController {
     }
 
     @PutMapping("/status/{orderId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updateStatus(
             @PathVariable Long orderId,
             @RequestParam String status) {

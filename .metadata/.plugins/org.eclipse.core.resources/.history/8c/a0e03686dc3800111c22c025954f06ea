@@ -1,0 +1,123 @@
+//package in.cg.main.controller;
+//
+//import java.math.BigDecimal;
+//import java.time.LocalDate;
+//import java.time.LocalDateTime;
+//import java.time.format.DateTimeFormatter;
+//import java.util.List;
+//import java.util.stream.Collectors;
+//
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.PathVariable;
+//import org.springframework.web.bind.annotation.PutMapping;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RestController;
+//
+//import in.cg.main.dto.OrderStatsResponse;
+//import in.cg.main.dto.OrderTrackingResponse;
+//import in.cg.main.entities.Order;
+//import in.cg.main.repository.OrderRepository;
+//import in.cg.main.service.CheckoutService;
+//import in.cg.main.service.OrderService;
+//import in.cg.main.util.OrderStatusFormatter;
+//
+//@RestController
+//@RequestMapping("/api/internal/orders")
+//public class InternalOrderController {
+//
+//    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
+//
+//    private final OrderService orderService;
+//    private final CheckoutService checkoutService;
+//    private final OrderRepository orderRepository;
+//
+//    public InternalOrderController(OrderService orderService, 
+//                                   CheckoutService checkoutService,
+//                                   OrderRepository orderRepository) {
+//        this.orderService = orderService;
+//        this.checkoutService = checkoutService;
+//        this.orderRepository = orderRepository;
+//    }
+//
+//    @GetMapping("/stats")
+//    public ResponseEntity<OrderStatsResponse> getOrderStats() {
+//        return ResponseEntity.ok(orderService.getOrderStats());
+//    }
+//
+//    @GetMapping("/tracking")
+//    public ResponseEntity<List<OrderTrackingResponse>> getOrderTracking(
+//            @RequestParam(defaultValue = "10") int limit) {
+//        return ResponseEntity.ok(orderService.getRecentOrderTracking(limit));
+//    }
+//
+//    @GetMapping("/today")
+//    public ResponseEntity<List<TodayOrderSummary>> getTodaysOrders() {
+//        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+//        LocalDateTime endOfDay = startOfDay.plusDays(1);
+//
+//        List<Order> orders = orderRepository.findByPlacedAtBetween(startOfDay, endOfDay);
+//
+//        List<TodayOrderSummary> summaries = orders.stream()
+//                .map(this::toSummary)
+//                .collect(Collectors.toList());
+//
+//        return ResponseEntity.ok(summaries);
+//    }
+//
+//    @GetMapping("/{orderId}/tracking")
+//    public ResponseEntity<OrderTrackingResponse> getOrderTrackingByOrderId(@PathVariable Long orderId) {
+//        return ResponseEntity.ok(orderService.getOrderTrackingForAdmin(orderId));
+//    }
+//
+//    @PutMapping("/{orderId}/status")
+//    public ResponseEntity<OrderTrackingResponse> updateOrderStatus(
+//            @PathVariable Long orderId,
+//            @RequestParam String status) {
+//        checkoutService.updateStatus(orderId, OrderStatusFormatter.parseOrderStatus(status));
+//        return ResponseEntity.ok(orderService.getOrderTrackingForAdmin(orderId));
+//    }
+//
+//    @PutMapping("/prescriptions/{prescriptionId}/sync-status")
+//    public ResponseEntity<Void> syncPrescriptionStatus(
+//            @PathVariable Long prescriptionId,
+//            @RequestParam boolean approved) {
+//        checkoutService.syncPrescriptionReview(prescriptionId, approved);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    private TodayOrderSummary toSummary(Order order) {
+//        TodayOrderSummary summary = new TodayOrderSummary();
+//        summary.setOrderId(order.getId());
+//        summary.setOrderNumber(order.getOrderNumber());
+//        summary.setStatus(OrderStatusFormatter.toDisplayName(order.getStatus()));
+//        summary.setTotalAmount(order.getTotalAmount());
+//        summary.setItemCount(order.getItems() != null ? order.getItems().size() : 0);
+//        summary.setPlacedAt(order.getPlacedAt() != null ? 
+//                order.getPlacedAt().format(TIME_FORMATTER) : "N/A");
+//        return summary;
+//    }
+//
+//    public static class TodayOrderSummary {
+//        private Long orderId;
+//        private String orderNumber;
+//        private String status;
+//        private BigDecimal totalAmount;
+//        private int itemCount;
+//        private String placedAt;
+//
+//        public Long getOrderId() { return orderId; }
+//        public void setOrderId(Long orderId) { this.orderId = orderId; }
+//        public String getOrderNumber() { return orderNumber; }
+//        public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
+//        public String getStatus() { return status; }
+//        public void setStatus(String status) { this.status = status; }
+//        public BigDecimal getTotalAmount() { return totalAmount; }
+//        public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+//        public int getItemCount() { return itemCount; }
+//        public void setItemCount(int itemCount) { this.itemCount = itemCount; }
+//        public String getPlacedAt() { return placedAt; }
+//        public void setPlacedAt(String placedAt) { this.placedAt = placedAt; }
+//    }
+//}

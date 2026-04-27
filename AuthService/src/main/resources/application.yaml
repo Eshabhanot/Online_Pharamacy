@@ -11,6 +11,18 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  mail:
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,28 +35,13 @@ spring:
     config:
       enabled: false
 
-  mail:
-    host: ${SPRING_MAIL_HOST:}
-    port: ${SPRING_MAIL_PORT:587}
-    username: ${SPRING_MAIL_USERNAME:}
-    password: ${SPRING_MAIL_PASSWORD:}
-    properties:
-      mail:
-        smtp:
-          auth: ${SPRING_MAIL_SMTP_AUTH:false}
-          starttls:
-            enable: ${SPRING_MAIL_SMTP_STARTTLS_ENABLE:false}
-          connectiontimeout: ${SPRING_MAIL_CONNECTION_TIMEOUT:5000}
-          timeout: ${SPRING_MAIL_TIMEOUT:5000}
-          writetimeout: ${SPRING_MAIL_WRITE_TIMEOUT:5000}
+jwt:
+  secret: mySuperSecretKeyForJwtThatIsVerySecure1234567890
 
 app:
   mail:
     enabled: ${APP_MAIL_ENABLED:false}
-    from: ${APP_MAIL_FROM:no-reply@pharmacy.local}
-
-jwt:
-  secret: mySuperSecretKeyForJwtThatIsVerySecure1234567890
+    from: ${APP_MAIL_FROM:${SPRING_MAIL_USERNAME:}}
 
 order:
   service:

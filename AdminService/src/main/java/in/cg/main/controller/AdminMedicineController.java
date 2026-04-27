@@ -23,19 +23,19 @@ public class AdminMedicineController {
         this.adminMedicineService = adminMedicineService;
     }
 
-    // GET /api/admin/medicines
+    
     @GetMapping
     public ResponseEntity<List<MedicineResponse>> getAllMedicines() {
         return ResponseEntity.ok(adminMedicineService.getAllMedicines());
     }
 
-    // GET /api/admin/medicines/{id}
+  
     @GetMapping("/{id}")
     public ResponseEntity<MedicineResponse> getMedicine(@PathVariable Long id) {
         return ResponseEntity.ok(adminMedicineService.getMedicineById(id));
     }
 
-    // GET /api/admin/medicines/search?query=para
+
     @GetMapping("/search")
     public ResponseEntity<List<MedicineResponse>> search(
             @RequestParam String query) {
@@ -65,7 +65,7 @@ public class AdminMedicineController {
 //        return ResponseEntity.ok("Medicine deactivated successfully");
 //    }
     
-    @DeleteMapping("/medicines/{id}")
+    @DeleteMapping("/{id}")
     public String deleteMedicine(
             @PathVariable Long id,
             @RequestParam(defaultValue = "false") boolean permanent) {
@@ -79,7 +79,7 @@ public class AdminMedicineController {
         }
     }
     
-    @PutMapping("/medicines/{id}/restore")
+    @PutMapping("/{id}/restore")
     public String restoreMedicine(@PathVariable Long id) {
         adminMedicineService.restoreMedicine(id);
         return "Medicine restored successfully";

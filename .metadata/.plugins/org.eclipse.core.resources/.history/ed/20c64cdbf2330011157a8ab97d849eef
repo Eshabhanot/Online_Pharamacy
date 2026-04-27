@@ -1,0 +1,202 @@
+package in.cg.main.service;
+
+import java.util.List;
+import java.util.Random;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import in.cg.main.dto.AddressResponse;
+import in.cg.main.dto.LoginDTO;
+import in.cg.main.dto.LoginResponse;
+import in.cg.main.dto.OtpVerifyRequest;
+import in.cg.main.dto.RegisterDTO;
+import in.cg.main.entities.OtpToken;
+import in.cg.main.entities.User;
+import in.cg.main.entities.UserAddress;
+import in.cg.main.exception.ResourceNotFoundException;
+import in.cg.main.exception.UserAlreadyExistsException;
+import in.cg.main.repository.OtpRepository;
+import in.cg.main.repository.UserAddressRepository;
+import in.cg.main.repository.UserRepository;
+
+@Service
+public class UserServiceImp implements UserService {
+    private static final String GMAIL_DOMAIN = "@gmail.com";
+    private static final int OTP_LENGTH = 6;
+    private static final int OTP_EXPIRY_MINUTES = 5;
+
+    private final UserRepository userRepo;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final UserAddressRepository userAddressRepository;
+    private final EmailService emailService;
+    private final OtpRepository otpRepository;
+    private final SmsService smsService;
+    private final Random random = new Random();
+
+    public UserServiceImp(UserRepository userRepo,
+                          BCryptPasswordEncoder passwordEncoder,
+                          AuthenticationManager authenticationManager,
+                          JwtService jwtService,
+                          UserAddressRepository userAddressRepository,
+                          EmailService emailService,
+                          OtpRepository otpRepository,
+                          SmsService smsService) {
+        this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.userAddressRepository = userAddressRepository;
+        this.emailService = emailService;
+        this.otpRepository = otpRepository;
+        this.smsService = smsService;
+    }
+
+    @Override
+    public void registerUser(RegisterDTO userDto) throws ResourceNotFoundException {
+        String normalizedEmail = normalizeEmail(userDto.getEmail());
+
+        if (userRepo.findByEmailIgnoreCase(normalizedEmail) != null) {
+            throw new UserAlreadyExistsException("User already exists");
+        }
+
+        User newUser = new User();
+        newUser.setName(userDto.getName());
+        newUser.setEmail(normalizedEmail);
+        newUser.setMobile(userDto.getMobile());
+        newUser.setRole(resolveRole(userDto.getRole()));
+        newUser.setStatus(resolveStatus(userDto.getStatus()));
+        newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        User savedUser = userRepo.save(newUser);
+
+        if (userDto.getAddressLine1() != null && !userDto.getAddressLine1().isBlank()) {
+            UserAddress address = new UserAddress();
+            address.setUserId(savedUser.getId());
+            address.setFullName(savedUser.getName());
+            address.setPhone(savedUser.getMobile());
+            address.setAddressLine1(userDto.getAddressLine1());
+            address.setAddressLine2(userDto.getAddressLine2());
+            address.setCity(userDto.getCity());
+            address.setState(userDto.getState());
+            address.setPincode(userDto.getPincode());
+            address.setDefault(Boolean.TRUE.equals(userDto.getIsDefault()));
+            userAddressRepository.save(address);
+        }
+
+        emailService.sendRegistrationEmail(savedUser.getEmail(), savedUser.getName());
+    }
+
+    @Override
+    public LoginResponse loginUser(LoginDTO login) throws ResourceNotFoundException {
+        String normalizedEmail = normalizeEmail(login.getEmail());
+        User user = userRepo.findByEmail(normalizedEmail);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User Not Found");
+        }
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(normalizedEmail, login.getPassword()));
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String role = userDetails.getAuthorities().iterator().next().getAuthority();
+        String token = jwtService.generateToken(userDetails.getUsername(), role, user.getId());
+
+        List<AddressResponse> addresses = userAddressRepository.findByUserId(user.getId())
+                .stream()
+                .map(AddressResponse::from)
+                .toList();
+
+        return new LoginResponse(token, userDetails.getUsername(), role, user.getId(), addresses);
+    }
+
+    @Transactional
+    public void requestOtp(String mobile) throws ResourceNotFoundException {
+        User user = userRepo.findByMobile(mobile);
+        if (user == null) {
+            throw new ResourceNotFoundException("No account found with this mobile number");
+        }
+
+        String otp = generateOtp();
+        OtpToken token = new OtpToken(mobile, otp, OTP_EXPIRY_MINUTES);
+        otpRepository.markAllAsUsedByMobile(mobile);
+        otpRepository.save(token);
+
+        smsService.sendOtp(mobile, otp);
+    }
+
+    @Transactional
+    public LoginResponse verifyOtpAndLogin(OtpVerifyRequest request) {
+        User user = userRepo.findByMobile(request.getMobile());
+        if (user == null) {
+            throw new ResourceNotFoundException("No account found with this mobile number");
+        }
+
+        OtpToken otpToken = otpRepository.findTopByMobileOrderByCreatedAtDesc(request.getMobile())
+                .orElseThrow(() -> new RuntimeException("No OTP found. Please request a new OTP."));
+
+        if (!otpToken.isValid(request.getOtp())) {
+            if (otpToken.isExpired()) {
+                throw new RuntimeException("OTP has expired. Please request a new OTP.");
+            }
+            if (otpToken.isUsed()) {
+                throw new RuntimeException("OTP has already been used. Please request a new OTP.");
+            }
+            throw new RuntimeException("Invalid OTP. Please try again.");
+        }
+
+        otpToken.markAsUsed();
+        otpRepository.save(otpToken);
+
+        String token = jwtService.generateToken(user.getEmail(), user.getRole(), user.getId());
+
+        List<AddressResponse> addresses = userAddressRepository.findByUserId(user.getId())
+                .stream()
+                .map(AddressResponse::from)
+                .toList();
+
+        return new LoginResponse(token, user.getEmail(), user.getRole(), user.getId(), addresses);
+    }
+
+    private String generateOtp() {
+        StringBuilder otp = new StringBuilder();
+        for (int i = 0; i < OTP_LENGTH; i++) {
+            otp.append(random.nextInt(10));
+        }
+        return otp.toString();
+    }
+
+    private String normalizeEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("Email is required");
+        }
+
+        String normalizedEmail = email.trim().toLowerCase();
+        if (!normalizedEmail.endsWith(GMAIL_DOMAIN)) {
+            throw new IllegalArgumentException("Only Gmail addresses are allowed");
+        }
+        return normalizedEmail;
+    }
+
+    private String resolveRole(String role) {
+        if (role == null || role.isBlank()) {
+            return "USER";
+        }
+        return role.trim().toUpperCase();
+    }
+
+    private String resolveStatus(String status) {
+        if (status == null || status.isBlank()) {
+            return "ACTIVE";
+        }
+        return status.trim().toUpperCase();
+    }
+}

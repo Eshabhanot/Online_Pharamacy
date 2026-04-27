@@ -5,7 +5,7 @@ package in.cg.main.dto;
 public class PrescriptionReviewRequest {
 
     private boolean approved;
-    private String rejectionReason;   // required when approved = false
+    private String rejectionReason;   
 
     public boolean isApproved() { return approved; }
     public String getRejectionReason() { return rejectionReason; }

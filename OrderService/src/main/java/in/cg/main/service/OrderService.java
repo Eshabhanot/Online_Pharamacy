@@ -14,7 +14,11 @@ public interface OrderService {
 
     OrderResponse getOrderById(Long orderId, Long customerId);
 
+    OrderResponse getOrderByIdForAdmin(Long orderId);
+
     OrderTrackingResponse getOrderTracking(Long orderId, Long customerId);
+
+    OrderTrackingResponse getOrderTrackingForAdmin(Long orderId);
 
     OrderStatsResponse getOrderStats();
 

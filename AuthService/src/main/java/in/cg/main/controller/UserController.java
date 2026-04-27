@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import in.cg.main.dto.ForgotPasswordOtpRequest;
+import in.cg.main.dto.ForgotPasswordOtpResponse;
+import in.cg.main.dto.ForgotPasswordRequest;
 import in.cg.main.dto.LoginDTO;
 import in.cg.main.dto.LoginResponse;
 import in.cg.main.dto.RegisterDTO;
@@ -23,7 +26,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @PostMapping({"/register", "/signup"})
     public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterDTO register) throws ResourceNotFoundException {
         userService.registerUser(register);
         return ResponseEntity.ok("User Registered Successfully");
@@ -32,5 +35,18 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginDTO login) throws ResourceNotFoundException {
         return ResponseEntity.ok(userService.loginUser(login));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ForgotPasswordOtpResponse> forgotPassword(@Valid @RequestBody ForgotPasswordOtpRequest request)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok(userService.requestForgotPasswordOtp(request));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ForgotPasswordRequest request)
+            throws ResourceNotFoundException {
+        userService.resetForgottenPassword(request);
+        return ResponseEntity.ok("Password reset successfully");
     }
 }

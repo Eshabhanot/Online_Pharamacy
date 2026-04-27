@@ -17,7 +17,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Auth Service API")
                         .version("1.0"))
-                // Keep server relative so Swagger UI at gateway (8080) calls same origin.
+                
                 .servers(List.of(new Server().url("/")));
     }
 }

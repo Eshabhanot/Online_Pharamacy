@@ -3,10 +3,14 @@ package in.cg.main.service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import in.cg.main.client.CatalogClient;
 import in.cg.main.entities.Order;
+import in.cg.main.entities.OrderItem;
 import in.cg.main.entities.Payment;
 import in.cg.main.enums.OrderStatus;
 import in.cg.main.enums.PaymentStatus;
@@ -18,19 +22,24 @@ import in.cg.main.util.OrderStatusFormatter;
 @Transactional
 public class PaymentServiceImpl implements PaymentService {
 
+    private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final EmailService emailService;
     private final CheckoutServiceImpl checkoutService;
+    private final CatalogClient catalogClient;
 
     public PaymentServiceImpl(PaymentRepository paymentRepository,
                               OrderRepository orderRepository,
                               EmailService emailService,
-                              CheckoutServiceImpl checkoutService) {
+                              CheckoutServiceImpl checkoutService,
+                              CatalogClient catalogClient) {
         this.paymentRepository = paymentRepository;
         this.orderRepository = orderRepository;
         this.emailService = emailService;
         this.checkoutService = checkoutService;
+        this.catalogClient = catalogClient;
     }
 
     @Override
@@ -67,6 +76,8 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setStatus(PaymentStatus.SUCCESS);
             payment.setCompletedAt(LocalDateTime.now());
             order.setStatus(OrderStatus.PAID);
+            
+            reduceStockForOrder(order);
         } else {
             payment.setStatus(PaymentStatus.FAILED);
             order.setStatus(OrderStatus.PAYMENT_FAILED);
@@ -76,13 +87,28 @@ public class PaymentServiceImpl implements PaymentService {
         Payment savedPayment = paymentRepository.save(payment);
 
         String customerEmail = checkoutService.resolveCustomerEmail(order.getCustomerId(), null);
+        
+        String paymentStatus = OrderStatusFormatter.toDisplayName(savedPayment.getStatus());
         emailService.sendOrderEmail(
                 customerEmail,
-                "Payment update for order " + order.getOrderNumber(),
-                "Payment for order " + order.getOrderNumber() + " is " + OrderStatusFormatter.toDisplayName(savedPayment.getStatus())
-                        + " and order status is " + OrderStatusFormatter.toDisplayName(order.getStatus()) + "."
+                "Payment update - Order " + order.getOrderNumber(),
+                "Payment for order " + order.getOrderNumber() + " is " + paymentStatus + "."
         );
 
         return savedPayment;
+    }
+
+    private void reduceStockForOrder(Order order) {
+        for (OrderItem item : order.getItems()) {
+            try {
+                catalogClient.reduceStock(item.getMedicineId(), item.getQuantity());
+                log.info("Stock reduced for medicine ID {} by quantity {}", 
+                        item.getMedicineId(), item.getQuantity());
+            } catch (Exception ex) {
+                log.error("Failed to reduce stock for medicine ID {}: {}", 
+                        item.getMedicineId(), ex.getMessage());
+                throw new RuntimeException("Failed to reduce stock for " + item.getMedicineName());
+            }
+        }
     }
 }

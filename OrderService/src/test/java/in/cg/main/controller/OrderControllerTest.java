@@ -3,6 +3,7 @@ package in.cg.main.controller;
 import in.cg.main.dto.OrderResponse;
 import in.cg.main.dto.OrderTrackingResponse;
 import in.cg.main.enums.OrderStatus;
+import in.cg.main.security.JwtService;
 import in.cg.main.security.RequestCustomerResolver;
 import in.cg.main.service.CheckoutService;
 import in.cg.main.service.OrderService;
@@ -26,6 +27,7 @@ class OrderControllerTest {
     @Mock private CheckoutService checkoutService;
     @Mock private OrderService orderService;
     @Mock private RequestCustomerResolver requestCustomerResolver;
+    @Mock private JwtService jwtService;
 
     @InjectMocks
     private OrderController orderController;
@@ -78,5 +80,19 @@ class OrderControllerTest {
 
         assertEquals(200, response.getStatusCode().value());
         assertEquals("Out For Delivery", response.getBody().getStatus());
+    }
+
+    @Test
+    void getOrderTracking_adminToken_usesAdminLookup() {
+        OrderTrackingResponse tracking = new OrderTrackingResponse();
+        tracking.setOrderId(10L);
+        tracking.setStatus("Packed");
+        when(jwtService.extractRole("admin-token")).thenReturn("ROLE_ADMIN");
+        when(orderService.getOrderTrackingForAdmin(10L)).thenReturn(tracking);
+
+        ResponseEntity<OrderTrackingResponse> response = orderController.getOrderTracking(10L, null, "Bearer admin-token");
+
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("Packed", response.getBody().getStatus());
     }
 }

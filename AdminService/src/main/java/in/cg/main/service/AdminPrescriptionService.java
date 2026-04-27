@@ -1,70 +1,143 @@
 package in.cg.main.service;
 
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
-
 import in.cg.main.dto.PrescriptionReviewRequest;
 import in.cg.main.entities.Prescription;
-import in.cg.main.enums.PrescriptionStatus;
-import in.cg.main.repository.PrescriptionRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
-@Transactional
 public class AdminPrescriptionService {
 
-    private final PrescriptionRepository prescriptionRepository;
+    private static final Logger log = LoggerFactory.getLogger(AdminPrescriptionService.class);
 
-    public AdminPrescriptionService(PrescriptionRepository prescriptionRepository) {
-        this.prescriptionRepository = prescriptionRepository;
+    private final RestTemplate restTemplate;
+    private final DiscoveryClient discoveryClient;
+    private final String catalogServiceBaseUrl;
+    private final String orderServiceBaseUrl;
+
+    public AdminPrescriptionService(RestTemplate restTemplate,
+                                    DiscoveryClient discoveryClient,
+                                    @Value("${catalog.service.url:http://localhost:8082}") String catalogServiceBaseUrl,
+                                    @Value("${order.service.url:http://localhost:8083}") String orderServiceBaseUrl) {
+        this.restTemplate = restTemplate;
+        this.discoveryClient = discoveryClient;
+        this.catalogServiceBaseUrl = catalogServiceBaseUrl;
+        this.orderServiceBaseUrl = orderServiceBaseUrl;
     }
 
-    // GET all PENDING prescriptions — the review queue
     public List<Prescription> getPendingPrescriptions() {
-        return prescriptionRepository.findByStatus(PrescriptionStatus.PENDING);
+        for (String baseUrl : candidateBaseUrls(catalogServiceBaseUrl, "CATALOG-SERVICE")) {
+            try {
+                Prescription[] response = restTemplate.getForObject(
+                        baseUrl + "/api/prescriptions/internal/pending",
+                        Prescription[].class);
+                return response == null ? List.of() : Arrays.asList(response);
+            } catch (Exception ignored) {
+            }
+        }
+        throw new RuntimeException("Unable to fetch pending prescriptions");
     }
 
-    // GET one prescription detail
     public Prescription getPrescriptionById(Long id) {
-        return prescriptionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Prescription not found: " + id));
+        for (String baseUrl : candidateBaseUrls(catalogServiceBaseUrl, "CATALOG-SERVICE")) {
+            try {
+                return restTemplate.getForObject(
+                        baseUrl + "/api/prescriptions/internal/" + id,
+                        Prescription.class);
+            } catch (Exception ignored) {
+            }
+        }
+        throw new RuntimeException("Prescription not found");
     }
 
-    // APPROVE or REJECT
     @org.springframework.cache.annotation.CacheEvict(value = "dashboard", allEntries = true)
     public Prescription reviewPrescription(Long prescriptionId,
-                                            PrescriptionReviewRequest request,
-                                            Long adminId) {
-
-        Prescription prescription = prescriptionRepository.findById(prescriptionId)
-            .orElseThrow(() -> new RuntimeException("Prescription not found"));
-
-        // Guard: can only review PENDING prescriptions
-        if (prescription.getStatus() != PrescriptionStatus.PENDING) {
-            throw new RuntimeException(
-                "Prescription already reviewed. Current status: "
-                + prescription.getStatus());
-        }
-
-        // Guard: rejection must have a reason
-        if (!request.isApproved() &&
-            (request.getRejectionReason() == null ||
-             request.getRejectionReason().isBlank())) {
+                                           PrescriptionReviewRequest request,
+                                           Long adminId) {
+        if (!request.isApproved()
+                && (request.getRejectionReason() == null || request.getRejectionReason().isBlank())) {
             throw new RuntimeException("Rejection reason is required");
         }
 
-        if (request.isApproved()) {
-            prescription.setStatus(PrescriptionStatus.APPROVED);
-        } else {
-            prescription.setStatus(PrescriptionStatus.REJECTED);
-            prescription.setRejectionReason(request.getRejectionReason());
+        Prescription reviewed = null;
+        RuntimeException lastFailure = null;
+
+        for (String baseUrl : candidateBaseUrls(catalogServiceBaseUrl, "CATALOG-SERVICE")) {
+            try {
+                String url = UriComponentsBuilder
+                        .fromHttpUrl(baseUrl + "/api/prescriptions/internal/{id}/review")
+                        .queryParam("approved", request.isApproved())
+                        .queryParam("rejectionReason", request.getRejectionReason())
+                        .buildAndExpand(prescriptionId)
+                        .encode()
+                        .toUriString();
+
+                RequestEntity<Void> entity = new RequestEntity<>(HttpMethod.PUT, URI.create(url));
+                ResponseEntity<Prescription> response = restTemplate.exchange(entity, Prescription.class);
+                reviewed = response.getBody();
+                break;
+            } catch (Exception ex) {
+                lastFailure = new RuntimeException("Unable to review prescription", ex);
+            }
         }
 
-        prescription.setReviewedAt(LocalDateTime.now());
-        prescription.setReviewedBy(adminId);
+        if (reviewed == null) {
+            throw lastFailure != null ? lastFailure : new RuntimeException("Unable to review prescription");
+        }
 
-        return prescriptionRepository.save(prescription);
+        syncPrescriptionReviewToOrders(reviewed.getId(), request.isApproved());
+        reviewed.setReviewedBy(adminId);
+        return reviewed;
+    }
+
+    private void syncPrescriptionReviewToOrders(Long prescriptionId, boolean approved) {
+        for (String baseUrl : candidateBaseUrls(orderServiceBaseUrl, "ORDER-SERVICE")) {
+            try {
+                String url = UriComponentsBuilder
+                        .fromHttpUrl(baseUrl + "/api/internal/orders/prescriptions/{prescriptionId}/sync-status")
+                        .queryParam("approved", approved)
+                        .buildAndExpand(prescriptionId)
+                        .toUriString();
+
+                RequestEntity<Void> entity = new RequestEntity<>(HttpMethod.PUT, URI.create(url));
+                restTemplate.exchange(entity, Void.class);
+                log.info("Synced prescription {} review to order service via {}", prescriptionId, baseUrl);
+                return;
+            } catch (Exception ex) {
+                log.warn("Failed to sync prescription {} review to order service via {}: {}",
+                        prescriptionId, baseUrl, ex.getMessage());
+            }
+        }
+        throw new RuntimeException("Prescription reviewed, but failed to sync order status");
+    }
+
+    private List<String> candidateBaseUrls(String configuredUrl, String serviceName) {
+        Set<String> urls = new LinkedHashSet<>();
+        if (configuredUrl != null && !configuredUrl.isBlank()) {
+            urls.add(configuredUrl.replaceAll("/+$", ""));
+        }
+        if (discoveryClient != null) {
+            List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
+            for (ServiceInstance instance : instances) {
+                urls.add(instance.getUri().toString().replaceAll("/+$", ""));
+            }
+        }
+        return new ArrayList<>(urls);
     }
 }

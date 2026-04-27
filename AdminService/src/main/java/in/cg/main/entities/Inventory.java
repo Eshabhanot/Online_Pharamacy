@@ -59,10 +59,10 @@ public class Inventory {
         updatedAt = LocalDateTime.now();
     }
 
-    // Constructors
+  
     public Inventory() {}
 
-    // Getters
+  
     public Long getId() { return id; }
     public Medicine getMedicine() { return medicine; }
     public int getQuantity() { return quantity; }
@@ -75,7 +75,7 @@ public class Inventory {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    // Setters
+  
     public void setId(Long id) { this.id = id; }
     public void setMedicine(Medicine medicine) { this.medicine = medicine; }
     public void setQuantity(int quantity) { this.quantity = quantity; }

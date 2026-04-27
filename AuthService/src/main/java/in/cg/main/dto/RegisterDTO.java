@@ -17,10 +17,12 @@ public class RegisterDTO {
 	@NotBlank(message="Name is required")
 	private String name;
 	
-	@Email(message="Invalid Format")
+	@NotBlank(message="Email is required")
+	@Email(message="Invalid email format")
+	@Pattern(regexp = "(?i)^[A-Z0-9._%+-]+@gmail\\.com$", message = "Only Gmail addresses are allowed")
 	private String email;
 	
-	@Schema(description = "10-digit mobile number without country code", example = "", defaultValue = "")
+	@Schema(description = "10-digit mobile number without country code", example = "string", defaultValue = "string")
 	@Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid mobile number")
 	private String mobile;
 	

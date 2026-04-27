@@ -14,8 +14,7 @@ import java.util.Optional;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    // ✅ Correct way to access nested property
+    
     Optional<Payment> findByOrder_Id(Long orderId);
-
     Optional<Payment> findByTransactionId(String transactionId);
 }

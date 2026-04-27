@@ -35,7 +35,7 @@ public class InventoryServiceImp implements InventoryService {
 
     private static final int LOW_STOCK_THRESHOLD = 10;
 
-    // ── ADMIN: Add batch ─────────────────────────────
+   
     @Override
     @org.springframework.cache.annotation.CacheEvict(value = "medicines", allEntries = true)
     public InventoryResponse addBatch(InventoryAddRequest req) {
@@ -46,7 +46,7 @@ public class InventoryServiceImp implements InventoryService {
         }
 
         // 2. Validate medicine via Feign-backed medicine service
-        // and keep a local shadow row for existing inventory FK mapping.
+      
         Medicine medicine = ensureLocalMedicine(req.getMedicineId());
 
         // 3. Create inventory
@@ -68,7 +68,7 @@ public class InventoryServiceImp implements InventoryService {
         return InventoryResponse.from(saved);
     }
 
-    // ── ORDER: Reduce stock (FIFO) ───────────────────
+   
     @Override
     @org.springframework.cache.annotation.CacheEvict(value = "medicines", allEntries = true)
     public void reduceStock(Long medicineId, int quantityNeeded) {
@@ -116,7 +116,7 @@ public class InventoryServiceImp implements InventoryService {
         syncMedicineStock(medicineId);
     }
 
-    // ── ADMIN: Expiring batches (paginated) ─────────
+
     @Override
     public List<InventoryResponse> getExpiringBatches(int withinDays) {
 
@@ -135,7 +135,7 @@ public class InventoryServiceImp implements InventoryService {
                 .collect(Collectors.toList());
     }
 
-    // ── ADMIN: Low stock batches (paginated) ────────
+
     @Override
     public List<InventoryResponse> getLowStockBatches() {
 

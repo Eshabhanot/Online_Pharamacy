@@ -33,7 +33,12 @@ class PrescriptionServiceImpTest {
 
     @Test
     void uploadPrescription_success_png() {
-        MockMultipartFile file = new MockMultipartFile("file", "p.png", "image/png", "abc".getBytes());
+        MockMultipartFile file = new MockMultipartFile("file", "p.png", "image/png", "abc".getBytes()) {
+            @Override
+            public void transferTo(File dest) {
+                // no-op to avoid actual filesystem write in test
+            }
+        };
         Prescription saved = new Prescription();
         saved.setId(10L);
         saved.setStatus(Prescription.PrescriptionStatus.PENDING);

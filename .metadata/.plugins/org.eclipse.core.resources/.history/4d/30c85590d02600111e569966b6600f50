@@ -1,5 +1,0 @@
-package in.cg.enums;
-
-public enum InventoryStatus {
-
-}

@@ -9,5 +9,7 @@ import in.cg.main.entities.User;
 public interface UserRepository extends JpaRepository<User,Long> {
 
 	User findByEmail(String email);
+	User findByEmailIgnoreCase(String email);
+	User findByMobile(String mobile);
 
 }
